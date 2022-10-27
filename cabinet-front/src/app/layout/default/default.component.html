@@ -1,14 +1,10 @@
 <app-header (toggleSideNav)="eventtoggleSideNav()"></app-header>
 
-<mat-drawer-container fxFlex class="example-container">
+<mat-drawer-container class="example-container">
   <mat-drawer mode="side" [opened]="hideSidepanel">
     <app-sidebar></app-sidebar>
   </mat-drawer>
-  <mat-drawer-content
-    fxFlex
-    style="border: 1px solid blue; padding: 2px"
-    fxLayout="column"
-  >
+  <mat-drawer-content>
     <router-outlet></router-outlet>
   </mat-drawer-content>
 </mat-drawer-container>
