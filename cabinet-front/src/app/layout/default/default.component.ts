@@ -6,13 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./default.component.scss'],
 })
 export class DefaultComponent implements OnInit {
-  hideSidepanel: boolean = true;
+  showSidepanel: boolean = true;
 
   constructor() {}
 
   ngOnInit(): void {}
 
   eventtoggleSideNav() {
-    this.hideSidepanel = !this.hideSidepanel;
+    this.showSidepanel = !this.showSidepanel;
   }
 }

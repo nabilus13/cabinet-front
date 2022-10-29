@@ -4,16 +4,22 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterModule } from '@angular/router';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { CardBannerComponent } from './widgets/card-banner/card-banner.component';
+import { ColumnChartComponent } from './widgets/column-chart/column-chart.component';
 import { LineChartComponent } from './widgets/line-chart/line-chart.component';
+import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +28,8 @@ import { LineChartComponent } from './widgets/line-chart/line-chart.component';
     SidebarComponent,
     LineChartComponent,
     CardBannerComponent,
+    ColumnChartComponent,
+    PieChartComponent,
   ],
   imports: [
     CommonModule,
@@ -34,6 +42,9 @@ import { LineChartComponent } from './widgets/line-chart/line-chart.component';
     MatMenuModule,
     HighchartsChartModule,
     MatCardModule,
+    MatTableModule,
+    MatPaginatorModule,
+    RouterModule,
   ],
   exports: [
     HeaderComponent,
@@ -41,6 +52,8 @@ import { LineChartComponent } from './widgets/line-chart/line-chart.component';
     SidebarComponent,
     LineChartComponent,
     CardBannerComponent,
+    ColumnChartComponent,
+    PieChartComponent,
   ],
 })
 export class SharedModule {}

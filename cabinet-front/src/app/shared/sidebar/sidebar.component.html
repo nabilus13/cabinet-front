@@ -6,8 +6,25 @@
     </div>
     <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" />
   </div>
+  <h2 matSubheader>Pages</h2>
+
+  <a mat-list-item routerLinkActive="list-item-active" routerLink="/dashboard"
+    >Dashboard</a
+  >
+  <a mat-list-item routerLinkActive="list-item-active" routerLink="/posts"
+    >Posts</a
+  >
+
+  <mat-divider></mat-divider>
+
+  <h2 matSubheader>Tools</h2>
+
+  <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+    <mat-icon>import_contacts</mat-icon>
+    Contacts
+  </a>
 </mat-nav-list>
-<div>Profie</div>
+<!-- <div>Profie</div>
 <mat-divider></mat-divider>
 <div>
   Menu<br />
@@ -20,4 +37,4 @@
 <mat-divider></mat-divider>
 <div>
   <div>Other Menu</div>
-</div>
+</div> -->
