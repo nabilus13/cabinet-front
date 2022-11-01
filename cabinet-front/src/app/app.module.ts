@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -13,6 +14,7 @@ import { DefaultModule } from './layout/default/default.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     DefaultModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

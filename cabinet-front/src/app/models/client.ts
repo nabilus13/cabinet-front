@@ -8,8 +8,8 @@ export interface Client {
   lieux?: string;
   dateLivraison?: Date;
   situation?: string;
-  telephone?: string;
+  telephone?: number;
   prix: number;
-  comission?: number;
+  comission?: number | null;
   totalCaisse?: number;
 }
