@@ -19,7 +19,16 @@ const routes: Routes = [
       },
       {
         path: 'posts',
+        // pathMatch: 'prefix',
         component: PostsComponent,
+        children: [
+          // <==== CHILDREN ARE DISPLAYED IN SUB ROUTER-OUTLET shared and in shared router module we put the component whre to go
+          {
+            path: 'shared',
+            loadChildren: () =>
+              import('./shared/shared.module').then((m) => m.SharedModule),
+          },
+        ],
       },
     ],
   },

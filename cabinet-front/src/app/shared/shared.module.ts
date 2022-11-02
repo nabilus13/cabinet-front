@@ -18,7 +18,10 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { ApiServiceService } from '../services/api-service.service';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { ExpensesTableComponent } from './postTables/expenses-table/expenses-table.component';
+import { FinancialTableComponent } from './postTables/financial-table/financial-table.component';
 import { GeneralTableComponent } from './postTables/general-table/general-table.component';
+import { SharedRoutingModule } from './shared-routing.module';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { CardBannerComponent } from './widgets/card-banner/card-banner.component';
 import { ColumnChartComponent } from './widgets/column-chart/column-chart.component';
@@ -34,6 +37,8 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     ColumnChartComponent,
     PieChartComponent,
     GeneralTableComponent,
+    FinancialTableComponent,
+    ExpensesTableComponent,
   ],
   imports: [
     CommonModule,
@@ -51,6 +56,7 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     RouterModule,
     MatFormFieldModule,
     MatInputModule,
+    SharedRoutingModule,
   ],
   exports: [
     HeaderComponent,
@@ -61,6 +67,8 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     ColumnChartComponent,
     PieChartComponent,
     GeneralTableComponent,
+    FinancialTableComponent,
+    ExpensesTableComponent,
   ],
   providers: [ApiServiceService],
 })

@@ -11,5 +11,5 @@ export interface Client {
   telephone?: number;
   prix: number;
   comission?: number | null;
-  totalCaisse?: number;
+  totalCaisse: number;
 }
