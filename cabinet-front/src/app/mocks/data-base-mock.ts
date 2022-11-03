@@ -1,3 +1,28 @@
+import { Expenses } from '../models/financial-table';
+
+export const expeneses: Expenses[] = [
+  {
+    dateReception: 'MAY',
+    totalExpenses: 0,
+  },
+  {
+    dateReception: 'JUN',
+    totalExpenses: 19025,
+  },
+  {
+    dateReception: 'JUL',
+    totalExpenses: 19800,
+  },
+  {
+    dateReception: 'AUG',
+    totalExpenses: 25922,
+  },
+  {
+    dateReception: 'SEP',
+    totalExpenses: 20160,
+  },
+];
+
 export const clientSource: any[] = [
   {
     id: 1,

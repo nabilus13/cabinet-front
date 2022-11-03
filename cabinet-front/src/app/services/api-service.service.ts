@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { clientSource } from '../mocks/data-base-mock';
+import { clientSource, expeneses } from '../mocks/data-base-mock';
 import { Client } from '../models/client';
 
 @Injectable({
@@ -13,6 +13,9 @@ export class ApiServiceService {
 
   getClients(): Observable<any[]> {
     return of(clientSource);
+  }
+  getExpenses(): Observable<any[]> {
+    return of(expeneses);
   }
 
   apiGetClients(): Observable<Client[]> {
