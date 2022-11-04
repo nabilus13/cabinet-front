@@ -35,13 +35,19 @@ export class FinancialTableComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {}
   ngOnInit(): void {
-    this.sharedDataApi.getClientData().subscribe((res) => {
-      this.data = res;
-      this.initilizeData(this.data);
-    });
     this.apiServiceService.getExpenses().subscribe((res) => {
       this.charges = res;
     });
+    this.sharedDataApi
+      .getClientData()
+      // .pipe(finalize((datas) => console.log('Sequence complete', datas)))
+      .subscribe((res) => {
+        if (!!res && this.charges.length > 0) {
+          this.data = res;
+          // console.log(this.dataSource);
+          this.initilizeData(this.data);
+        }
+      });
   }
 
   initilizeData(data: Client[]) {
@@ -86,13 +92,13 @@ export class FinancialTableComponent implements OnInit, AfterViewInit {
       totalCaisse: mapTotalCaisse[+key],
       comission: mapComission[+key],
       mois: month[+key],
-      charges: this.charges[index].totalExpenses,
+      charges: this.charges[index]?.totalExpenses,
       profitReel:
         mapTotalCaisse[+key] -
-        this.charges[index].totalExpenses -
+        this.charges[index]?.totalExpenses -
         mapComission[+key],
       profitTheorique:
-        prix - this.charges[index].totalExpenses - mapComission[+key],
+        prix - this.charges[index]?.totalExpenses - mapComission[+key],
     }));
     this.dataSource = this.res;
   }
@@ -138,4 +144,9 @@ export class FinancialTableComponent implements OnInit, AfterViewInit {
         return 0;
     }
   }
+}
+function finalize(
+  arg0: (data: any) => void
+): import('rxjs').OperatorFunction<Client[], unknown> {
+  throw new Error('Function not implemented.');
 }
