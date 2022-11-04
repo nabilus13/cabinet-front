@@ -13,6 +13,7 @@ import { ShareDataOfApiService } from 'src/app/services/share-data-of-api.servic
   styleUrls: ['./financial-table.component.scss'],
 })
 export class FinancialTableComponent implements OnInit, AfterViewInit {
+  loaderEnabled: boolean;
   dataSource: any[] = [];
   charges: any[] = [];
   displayedColumns: string[] = [
@@ -25,29 +26,28 @@ export class FinancialTableComponent implements OnInit, AfterViewInit {
     'profitTheorique',
   ];
   data: Client[] = [];
-  res: ContentFinantialTable[];
+  finantialContentTable: ContentFinantialTable[];
   tableFooterColumns: string[] = ['total'];
 
   constructor(
     private sharedDataApi: ShareDataOfApiService,
     private apiServiceService: ApiServiceService
-  ) {}
+  ) {
+    this.loaderEnabled = true;
+  }
 
   ngAfterViewInit(): void {}
   ngOnInit(): void {
     this.apiServiceService.getExpenses().subscribe((res) => {
       this.charges = res;
     });
-    this.sharedDataApi
-      .getClientData()
-      // .pipe(finalize((datas) => console.log('Sequence complete', datas)))
-      .subscribe((res) => {
-        if (!!res && this.charges.length > 0) {
-          this.data = res;
-          // console.log(this.dataSource);
-          this.initilizeData(this.data);
-        }
-      });
+    this.sharedDataApi.getClientData().subscribe((res) => {
+      if (!!res && this.charges.length > 0) {
+        this.data = res;
+        this.initilizeData(this.data);
+        this.loaderEnabled = false;
+      }
+    });
   }
 
   initilizeData(data: Client[]) {
@@ -87,55 +87,57 @@ export class FinancialTableComponent implements OnInit, AfterViewInit {
       }
     );
 
-    this.res = Object.entries(mapPrix).map(([key, prix], index) => ({
-      prix,
-      totalCaisse: mapTotalCaisse[+key],
-      comission: mapComission[+key],
-      mois: month[+key],
-      charges: this.charges[index]?.totalExpenses,
-      profitReel:
-        mapTotalCaisse[+key] -
-        this.charges[index]?.totalExpenses -
-        mapComission[+key],
-      profitTheorique:
-        prix - this.charges[index]?.totalExpenses - mapComission[+key],
-    }));
-    this.dataSource = this.res;
+    this.finantialContentTable = Object.entries(mapPrix).map(
+      ([key, prix], index) => ({
+        prix,
+        totalCaisse: mapTotalCaisse[+key],
+        comission: mapComission[+key],
+        mois: month[+key],
+        charges: this.charges[index]?.totalExpenses,
+        profitReel:
+          mapTotalCaisse[+key] -
+          this.charges[index]?.totalExpenses -
+          mapComission[+key],
+        profitTheorique:
+          prix - this.charges[index]?.totalExpenses - mapComission[+key],
+      })
+    );
+    this.dataSource = this.finantialContentTable;
   }
   public getTotalCost(element: string): number {
     switch (element) {
       case 'prix':
-        return this.res
+        return this.finantialContentTable
           .map((t) => {
             return Number(t?.prix);
           })
           .reduce((acc, value) => acc + value, 0);
       case 'comission':
-        return this.res
+        return this.finantialContentTable
           .map((t) => {
             return Number(t?.comission);
           })
           .reduce((acc, value) => acc + value, 0);
       case 'totalCaisse':
-        return this.res
+        return this.finantialContentTable
           .map((t) => {
             return Number(t?.totalCaisse);
           })
           .reduce((acc, value) => acc + value, 0);
       case 'charges':
-        return this.res
+        return this.finantialContentTable
           .map((t) => {
             return Number(t?.charges);
           })
           .reduce((acc, value) => acc + value, 0);
       case 'profitReel':
-        return this.res
+        return this.finantialContentTable
           .map((t) => {
             return Number(t?.profitReel);
           })
           .reduce((acc, value) => acc + value, 0);
       case 'profitTheorique':
-        return this.res
+        return this.finantialContentTable
           .map((t) => {
             return Number(t?.profitTheorique);
           })

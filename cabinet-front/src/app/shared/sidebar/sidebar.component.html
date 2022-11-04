@@ -26,7 +26,7 @@
 </mat-nav-list>
 <mat-nav-list>
   <mat-list-item (click)="showSubmenu = !showSubmenu" class="parent">
-    <span class="full-width" *ngIf="isExpanded || isShowing">Parent Menu</span>
+    <span class="full-width" *ngIf="isExpanded || isShowing">Tablas</span>
     <mat-icon mat-list-icon>home</mat-icon>
     <mat-icon
       class="menu-button"
@@ -49,8 +49,14 @@
     <a
       mat-list-item
       routerLinkActive="list-item-active"
+      routerLink="/posts/shared/expenses"
+      >Tabla Gastos y Deudas</a
+    >
+    <a
+      mat-list-item
+      routerLinkActive="list-item-active"
       routerLink="/posts/shared/finantial"
-      >Resumen Financiero</a
+      >Tabla Resumen Financiero</a
     >
     <!-- <mat-list-item (click)="showSubSubMenu = !showSubSubMenu" class="parent">
       <span class="full-width" *ngIf="isExpanded || isShowing"

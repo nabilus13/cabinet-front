@@ -11,7 +11,7 @@
       matColumnDef="{{ fieldHeader }}"
     >
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ fieldHeader }}
+        {{ fieldHeader | uppercase }}
       </th>
       <!-- <td mat-cell *matCellDef="let row">{{ row.id }}</td> -->
       <ng-container *matCellDef="let element">

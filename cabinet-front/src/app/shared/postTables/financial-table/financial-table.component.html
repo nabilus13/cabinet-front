@@ -1,12 +1,13 @@
 <p>financial-table works!</p>
-<div class="mat-elevation-z8">
+<div *ngIf="!loaderEnabled" class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container
       *ngFor="let columnName of displayedColumns; let i = index"
       matColumnDef="{{ columnName }}"
+      style="justify-content: center"
     >
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ columnName }}
+      <th mat-header-cell *matHeaderCellDef>
+        {{ columnName | uppercase }}
       </th>
       <td mat-footer-cell *matFooterCellDef>
         {{ columnName === "mois" ? "Total" : getTotalCost(columnName) }}
@@ -23,4 +24,9 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
   </table>
+</div>
+<div class="loader-wrapper" *ngIf="loaderEnabled">
+  <div class="backdrop"></div>
+
+  <div class="spinner"></div>
 </div>

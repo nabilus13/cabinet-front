@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { HighchartsChartModule } from 'highcharts-angular';
@@ -57,6 +58,7 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     MatFormFieldModule,
     MatInputModule,
     SharedRoutingModule,
+    MatSortModule,
   ],
   exports: [
     HeaderComponent,
