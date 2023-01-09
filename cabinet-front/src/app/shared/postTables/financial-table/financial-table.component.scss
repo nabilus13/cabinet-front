@@ -11,7 +11,7 @@ table {
 }
 tr.mat-footer-row {
   font-weight: bold;
-  background-color: #6200ee;
+  background-color: #3d5afe;
 }
 th.mat-sort-header-container {
   justify-content: center !important;
@@ -27,6 +27,7 @@ td.mat-cell {
 }
 td.mat-footer-cell {
   text-align: center !important;
+  color: aliceblue;
 }
 .backdrop {
   position: fixed;
