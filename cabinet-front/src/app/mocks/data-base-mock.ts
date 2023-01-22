@@ -2,28 +2,36 @@ import { Expenses } from '../models/financial-table';
 
 export const expeneses: Expenses[] = [
   {
-    dateReception: 'MAY',
+    dateReception: 'May-22',
     totalExpenses: 0,
   },
   {
-    dateReception: 'JUN',
+    dateReception: 'Jun-22',
     totalExpenses: 19025,
   },
   {
-    dateReception: 'JUL',
+    dateReception: 'Jul-22',
     totalExpenses: 19800,
   },
   {
-    dateReception: 'AUG',
+    dateReception: 'Aug-22',
     totalExpenses: 25922,
   },
   {
-    dateReception: 'SEP',
+    dateReception: 'Sep-22',
     totalExpenses: 20160,
   },
   {
-    dateReception: 'OCT',
+    dateReception: 'Oct-22',
     totalExpenses: 26563,
+  },
+  {
+    dateReception: 'Nov-22',
+    totalExpenses: 24157,
+  },
+  {
+    dateReception: 'Dec-22',
+    totalExpenses: 21705,
   },
 ];
 

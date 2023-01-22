@@ -1,12 +1,19 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpResponse,
+  HttpStatusCode,
+} from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HeaderType } from 'src/app/enum/header-type';
 import { NotificationTypes } from 'src/app/enum/notification-types';
+import { Client } from 'src/app/models/client';
 import { User } from 'src/app/models/user';
+import { ApiServiceService } from 'src/app/services/api-service.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { ShareDataOfApiService } from 'src/app/services/share-data-of-api.service';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +23,14 @@ import { NotificationService } from 'src/app/services/notification.service';
 export class LoginComponent implements OnInit, OnDestroy {
   public showLoading: boolean;
   private subscriptions: Subscription[] = [];
+  data: Client[] = [];
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private serviceApi: ApiServiceService,
+    private sharedDataApi: ShareDataOfApiService
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +51,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.authenticationService.addUserToLocalCache(
             response.body ?? new User()
           );
+          if (response.status == HttpStatusCode.Ok) {
+            this.afterRequestLoginSuccess();
+          }
           this.router.navigateByUrl('/home');
           this.showLoading = false;
         },
@@ -53,6 +66,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       )
     );
+  }
+
+  async afterRequestLoginSuccess(): Promise<void> {
+    await this.serviceApi.apiAllClients.subscribe((res: Client[]) => {
+      this.data = res;
+      console.log(this.data);
+      this.sharedDataApi.setClientData(this.data);
+    });
   }
 
   private sendErrorNotification(

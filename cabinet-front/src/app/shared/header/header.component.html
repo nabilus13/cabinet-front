@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar>
   <mat-toolbar-row>
     <button mat-icon-button (click)="toggleSideBar()">
       <mat-icon
@@ -9,18 +9,35 @@
       >
     </button>
     <span> APP LOGO</span>
-    <div fxFlex fxLayoutAlign="flex-end">
+    <div
+      fxFlex="80"
+      fxLayoutGap="20px"
+      fxLayoutAlign="end center"
+      class="select"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>Custom calendar header</mat-label>
+        <mat-label>Inherited calendar color</mat-label>
+        <input matInput [matDatepicker]="picker1" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker1"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div fxFlex="20" fxLayoutAlign="end end" [style.margin-top]="'12px'">
       <ul fxLayout="row" fxLayoutGap="20px">
         <li>
           <button mat-icon-button>
             <mat-icon>settings</mat-icon>
           </button>
         </li>
-        <!-- <li>
-          <button mat-icon-button>
-            <mat-icon>help_outline</mat-icon>
-          </button>
-        </li> -->
+        <!-- <li> -->
+
+        <!-- <br /><br /> -->
+        <!-- </li> -->
         <li>
           <button mat-button [matMenuTriggerFor]="menu">
             <mat-icon>person_outline</mat-icon>

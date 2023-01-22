@@ -23,7 +23,7 @@ import {
   ExpensesContentTable,
 } from 'src/app/models/expenses-table';
 import { monthConst } from 'src/app/models/financial-table';
-import { ShareDataOfApiService } from 'src/app/services/share-data-of-api.service';
+import { ApiServiceService } from 'src/app/services/api-service.service';
 
 @Component({
   selector: 'app-expenses-table',
@@ -66,7 +66,7 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(
-    private sharedDataApi: ShareDataOfApiService,
+    private serviceApi: ApiServiceService,
     private cd: ChangeDetectorRef
   ) {
     this.loaderEnabled = true;
@@ -80,7 +80,7 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // this.expensescontentTable[0].clients = [];
 
-    this.subscription = this.sharedDataApi.getClientData().subscribe((res) => {
+    this.subscription = this.serviceApi.apiAllClients.subscribe((res) => {
       if (!!res) {
         this.data = res;
         this.initilizeData(this.data);

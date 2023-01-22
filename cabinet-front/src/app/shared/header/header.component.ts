@@ -9,7 +9,6 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 })
 export class HeaderComponent implements OnInit {
   @Output() toggleSideNav: EventEmitter<any> = new EventEmitter();
-
   constructor(
     private authenticationService: AuthenticationService,
     private router: Router

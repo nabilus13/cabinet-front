@@ -1,19 +1,21 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Client } from 'src/app/models/client';
 import {
   ContentFinantialTable,
   monthConst,
 } from 'src/app/models/financial-table';
 import { ApiServiceService } from 'src/app/services/api-service.service';
-import { ShareDataOfApiService } from 'src/app/services/share-data-of-api.service';
 
 @Component({
   selector: 'app-financial-table',
   templateUrl: './financial-table.component.html',
   styleUrls: ['./financial-table.component.scss'],
 })
-export class FinancialTableComponent implements OnInit, AfterViewInit {
+export class FinancialTableComponent implements OnInit, OnDestroy {
   loaderEnabled: boolean;
+  subscription: Subscription;
+
   dataSource: any[] = [];
   charges: any[] = [];
   displayedColumns: string[] = [
@@ -29,25 +31,28 @@ export class FinancialTableComponent implements OnInit, AfterViewInit {
   finantialContentTable: ContentFinantialTable[];
   tableFooterColumns: string[] = ['total'];
 
-  constructor(
-    private sharedDataApi: ShareDataOfApiService,
-    private apiServiceService: ApiServiceService
-  ) {
+  constructor(private apiServiceService: ApiServiceService) {
     this.loaderEnabled = true;
   }
+  ngOnDestroy(): void {
+    if (!!this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
-  ngAfterViewInit(): void {}
   ngOnInit(): void {
     this.apiServiceService.getExpenses().subscribe((res) => {
       this.charges = res;
     });
-    this.sharedDataApi.getClientData().subscribe((res) => {
-      if (!!res && this.charges.length > 0) {
-        this.data = res;
-        this.initilizeData(this.data);
-        this.loaderEnabled = false;
+    this.subscription = this.apiServiceService.apiAllClients.subscribe(
+      (res) => {
+        if (!!res && this.charges.length > 0) {
+          this.data = res;
+          this.initilizeData(this.data);
+          this.loaderEnabled = false;
+        }
       }
-    });
+    );
   }
 
   initilizeData(data: Client[]) {
@@ -74,6 +79,8 @@ export class FinancialTableComponent implements OnInit, AfterViewInit {
         [index: number]: number;
       }
     );
+    console.log(mapTotalCaisse);
+
     const mapComission = data.reduce(
       (a, b) => {
         const m = toDate(b.dateReception).getMonth();

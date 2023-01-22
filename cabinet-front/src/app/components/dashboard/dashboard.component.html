@@ -20,7 +20,17 @@
 <mat-divider class="p-2"></mat-divider>
 
 <div>
-  <app-line-chart></app-line-chart>
+  <app-line-chart
+    [data]="data"
+    [categoriesMonth]="categoriesMonth"
+    [months]="months"
+    [charges]="charges"
+    [caisseTotaTeorique]="caisseTotaTeorique"
+    [caisseTotalReel]="caisseTotalReel"
+    [comissionTotale]="comissionTotale"
+    [profitTotalReel]="profitTotalReel"
+    [profitTotalTheorique]="profitTotalTheorique"
+  ></app-line-chart>
 </div>
 <!-- </div> -->
 
@@ -29,7 +39,17 @@
 
 <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
   <div fxFlex="70">
-    <app-column-chart></app-column-chart>
+    <app-column-chart
+      [data]="data"
+      [categoriesMonth]="categoriesMonth"
+      [caisseTotaTeorique]="caisseTotaTeorique"
+      [caisseTotalReel]="caisseTotalReel"
+      [comissionTotale]="comissionTotale"
+      [totalDette]="totalDette"
+      [chargesFixes]="chargesFixes"
+      [profitTotalReel]="profitTotalReel"
+      [profitTotalTheorique]="profitTotalTheorique"
+    ></app-column-chart>
   </div>
   <div fxFlex="30">
     <app-pie-chart></app-pie-chart>
