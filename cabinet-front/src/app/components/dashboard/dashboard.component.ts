@@ -109,7 +109,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   tiels: CardBannerTile[] = [];
   ngOnInit(): void {
-    this.tiels = tiles;
     this.subscription2 = this.apiServiceService
       .getExpenses()
       .subscribe((res) => {
@@ -119,6 +118,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       (res: Client[]) => {
         this.data = res;
         this.setCommonData();
+        this.setCardBanners();
       }
     );
     console.log(tiles);
@@ -216,15 +216,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     //reducer para extraer los simatorios anteriores ewn un solo array
     this.profitTotalReel = arrayAll.reduce(
       (a, b) => [...a, b.profitTotalReel],
-      // const m = toDate(b.p).getMonth();
-      // a[m] = a[m] ? +a[m] + b.prix : +b.prix;
 
       [] as number[]
     );
     this.profitTotalTheorique = arrayAll.reduce(
       (a, b) => [...a, b.profitTotalTheorique],
-      // const m = toDate(b.p).getMonth();
-      // a[m] = a[m] ? +a[m] + b.prix : +b.prix;
 
       [] as number[]
     );
@@ -237,6 +233,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+  setCardBanners() {
+    let sum = 0;
+    for (let key in this.totalDette) {
+      sum += this.totalDette[key];
+    }
+    let sumCaisse = 0;
+    for (let key in this.caisseTotalReel) {
+      sumCaisse += this.caisseTotalReel[key];
+    }
+    this.tiels = [
+      {
+        title: 'Beneficio Teorico',
+        subtitle: '2022',
+        imgSource: '../../../../assets/revenue-icon-20.png',
+        amount: this.profitTotalTheorique.reduce((acc, val) => (acc += val), 0),
+      },
+      {
+        title: 'Beneficio Real',
+        subtitle: '2022',
+        imgSource: '../../../../assets/revenue-icon-12.png',
+        amount: this.profitTotalReel.reduce((acc, val) => (acc += val), 0),
+      },
+      {
+        title: 'Deuda Tolal',
+        subtitle: '2022',
+        imgSource: '../../../../assets/revenue-icon-24.png',
+        amount: sum,
+      },
+      {
+        title: 'Total Bruto Real',
+        subtitle: '2022',
+        imgSource: '../../../../assets/revenue-icon-29.png',
+        amount: sumCaisse,
+      },
+    ];
+  }
   ngOnDestroy(): void {
     if (!!this.subscription) {
       this.subscription.unsubscribe();

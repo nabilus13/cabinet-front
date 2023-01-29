@@ -9,9 +9,11 @@ table {
 .mat-row:nth-child(odd) {
   background-color: #ffffff;
 }
-th.mat-header-cell {
-  text-align: center !important;
-}
 td.mat-cell {
   text-align: center !important;
+}
+
+::ng-deep .mat-sort-header-container {
+  display: flex;
+  justify-content: center;
 }
