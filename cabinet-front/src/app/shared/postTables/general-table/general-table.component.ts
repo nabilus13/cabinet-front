@@ -22,7 +22,8 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   dataSource: MatTableDataSource<any>;
   subscription: Subscription;
-
+  showModal = false;
+  title = 'CLient';
   constructor(private serviceApi: ApiServiceService) {}
   ngOnDestroy(): void {
     if (this.subscription) {
@@ -56,6 +57,10 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.serviceApi.apiGetClients().subscribe((res: Client[]) => {
     //   console.log(res);
     // });
+  }
+  openModal() {
+    console.log('pasa');
+    this.showModal = true;
   }
   async getData() {
     this.subscription = await this.serviceApi.apiAllClients.subscribe(

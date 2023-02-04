@@ -1,8 +1,19 @@
-<mat-form-field appearance="standard">
-  <mat-label>Filter</mat-label>
-  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input />
-</mat-form-field>
-
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-form-field appearance="standard">
+    <mat-label>Filter</mat-label>
+    <input
+      matInput
+      (keyup)="applyFilter($event)"
+      placeholder="Ex. Mia"
+      #input
+    />
+  </mat-form-field>
+  <div class="example-button-row">
+    <button mat-raised-button fxLayoutGap="10px" (click)="openModal()">
+      <mat-icon>add</mat-icon><span>Ajouter Client</span>
+    </button>
+  </div>
+</div>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
     <!-- ID Column -->

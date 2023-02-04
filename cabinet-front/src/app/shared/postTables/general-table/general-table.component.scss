@@ -17,3 +17,12 @@ td.mat-cell {
   display: flex;
   justify-content: center;
 }
+
+.example-button-row {
+  display: table-cell;
+  max-width: 400px;
+  text-align: center !important;
+}
+.mat-raised-button {
+  background-color: #f0b609;
+}
