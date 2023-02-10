@@ -1,13 +1,14 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,7 +21,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { BsModalRef, ModalModule } from 'ngx-bootstrap/modal';
 import { ApiServiceService } from '../services/api-service.service';
+import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
+import { DialogFormComponentComponent } from './dialog-form-component/dialog-form-component.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { ExpensesTableComponent } from './postTables/expenses-table/expenses-table.component';
@@ -32,6 +36,7 @@ import { CardBannerComponent } from './widgets/card-banner/card-banner.component
 import { ColumnChartComponent } from './widgets/column-chart/column-chart.component';
 import { LineChartComponent } from './widgets/line-chart/line-chart.component';
 import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
+
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -44,6 +49,8 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     GeneralTableComponent,
     FinancialTableComponent,
     ExpensesTableComponent,
+    DialogFormComponentComponent,
+    DialogConfirmationComponent,
   ],
   imports: [
     CommonModule,
@@ -66,8 +73,11 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     MatSelectModule,
     MatOptionModule,
     FormsModule,
+    ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatDialogModule,
+    ModalModule.forRoot(),
   ],
   exports: [
     HeaderComponent,
@@ -81,6 +91,7 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     FinancialTableComponent,
     ExpensesTableComponent,
   ],
-  providers: [ApiServiceService],
+  entryComponents: [DialogFormComponentComponent, DialogConfirmationComponent],
+  providers: [ApiServiceService, DatePipe, BsModalRef],
 })
 export class SharedModule {}

@@ -1,0 +1,188 @@
+<div fxLayout="column" fxLayoutAlign="center center">
+  <h1 mat-dialog-title>{{ description }}</h1>
+  <div mat-dialog-content [formGroup]="form">
+    <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="space-around center">
+      <div fxFlex="40">
+        <mat-form-field>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="dateReception"
+            placeholder="Date de reception"
+            datePickerFormat="YYYY/MM/DD"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="30">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="nombre de plans"
+            formControlName="nombrePlans"
+          />
+          <mat-error *ngIf="form.get('nombrePlans')?.hasError('required')">
+            Saisissez un nombre de plans
+          </mat-error>
+          <mat-error
+            *ngIf="
+              form.get('nombrePlans')?.invalid &&
+              (form.get('nombrePlans')?.dirty ||
+                form.get('nombrePlans')?.touched)
+            "
+          >
+            Le prix doit etre un numéro.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="30">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="type de dossier"
+            formControlName="typeDossier"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="space-around center">
+      <div fxFlex="40">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="nom prenom client"
+            formControlName="client"
+          />
+          <mat-error *ngIf="form.get('client')?.hasError('required')">
+            Saisissez un nom prenom de client
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="30">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="representant"
+            formControlName="representant"
+          />
+        </mat-form-field>
+      </div>
+      <div fxFlex="30">
+        <mat-form-field>
+          <input matInput placeholder="lieux" formControlName="lieux" />
+          <mat-error *ngIf="form.get('lieux')?.hasError('required')">
+            Saisissez un lieu
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="space-around center">
+      <div fxFlex="40">
+        <mat-form-field>
+          <input
+            matInput
+            [matDatepicker]="picker2"
+            formControlName="dateLivraison"
+            placeholder="Date de livraison"
+            datePickerFormat="YYYY/MM/DD"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker2"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="30">
+        <mat-form-field>
+          <mat-label>Situation</mat-label>
+          <mat-select formControlName="situation">
+            <mat-option [value]="' En cours de livraison'">
+              En cours de livraison</mat-option
+            >
+            <mat-option [value]="'Terminé'">Terminé</mat-option>
+            <mat-option [value]="'Livré'">Livré</mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('situation')?.hasError('required')">
+            Saisissez un état de situation
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="30">
+        <mat-form-field>
+          <input matInput placeholder="telephone" formControlName="telephone" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayoutGap="30px" fxLayout="row" fxLayoutAlign="space-around center">
+      <div fxFlex="40">
+        <mat-form-field>
+          <input matInput placeholder="prix" formControlName="prix" />
+          <mat-error *ngIf="form.get('prix')?.hasError('required')">
+            Saisissez un prix
+          </mat-error>
+          <mat-error
+            *ngIf="
+              form.get('prix')?.invalid &&
+              (form.get('prix')?.dirty || form.get('prix')?.touched)
+            "
+          >
+            Le prix doit etre un numéro.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div fxFlex="30">
+        <mat-form-field>
+          <input matInput placeholder="comission" formControlName="comission" />
+        </mat-form-field>
+      </div>
+      <div fxFlex="30">
+        <mat-form-field>
+          <input
+            matInput
+            placeholder="total reçu à la caisse"
+            formControlName="totalCaisse"
+          />
+          <mat-error *ngIf="form.get('totalCaisse')?.hasError('required')">
+            Saisissez le montant d'avancement
+          </mat-error>
+          <mat-error
+            *ngIf="
+              form.get('totalCaisse')?.invalid &&
+              (form.get('totalCaisse')?.dirty ||
+                form.get('totalCaisse')?.touched)
+            "
+          >
+            La caisse doit etre un numéro.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row">
+    <mat-dialog-actions
+      fxLayoutGap="30px"
+      fxLayoutAlign="space-around center"
+      class="footer"
+    >
+      <div fxFlex="20">
+        <button class="mat-raised-button" (click)="close()">Close</button>
+      </div>
+      <div fxFlex="20">
+        <button
+          mat-raised-button
+          [disabled]="form.invalid"
+          type="submit"
+          class="mat-raised-button mat-primary"
+          (click)="save()"
+        >
+          Save
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</div>

@@ -33,6 +33,10 @@ export const expeneses: Expenses[] = [
     dateReception: 'Dec-22',
     totalExpenses: 21705,
   },
+  {
+    dateReception: 'Jan-23',
+    totalExpenses: 26804,
+  },
 ];
 
 export const clientSource: any[] = [

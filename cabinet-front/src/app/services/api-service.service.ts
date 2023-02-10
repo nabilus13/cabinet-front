@@ -10,7 +10,8 @@ import { Client } from '../models/client';
   providedIn: 'root',
 })
 export class ApiServiceService {
-  private cacheCLients$: Observable<Client[]>;
+  public cacheCLients$: Observable<Client[]>;
+  public cacheInitialized = false;
   constructor(private http: HttpClient) {}
   /*Método singleton para llamar una vez a los servicios necesarios*/
 
@@ -22,8 +23,9 @@ export class ApiServiceService {
   }
 
   get apiAllClients() {
-    if (!this.cacheCLients$) {
+    if (!this.cacheInitialized) {
       this.cacheCLients$ = this.apiGetClients().pipe(shareReplay(1));
+      this.cacheInitialized = true;
     }
     return this.cacheCLients$;
   }
@@ -36,5 +38,21 @@ export class ApiServiceService {
     return this.http.get<Client[]>(
       `${environment.API_BACKEND}clientsByDate?date=${date}`
     );
+  }
+
+  apiSaveClient(client: Client): Observable<any> {
+    return this.http.post<any>(`${environment.API_BACKEND}clients`, client, {
+      // el observe response es el q hace q mi respuesta sea un objeto con body status y hhttpheaders
+      observe: 'response',
+    });
+  }
+
+  deleteClient(id: number): Observable<any> {
+    return this.http.delete(`${environment.API_BACKEND}clients/${id}`, {
+      // headers: new HttpHeaders({
+      //   'Content-Type': 'application/json',
+      //   observe: 'response',
+      // }),
+    });
   }
 }

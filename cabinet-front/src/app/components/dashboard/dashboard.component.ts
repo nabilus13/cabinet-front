@@ -1,7 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { tiles } from 'src/app/mocks/banner-tile-mock';
 import { CardBannerTile } from 'src/app/models/card-banner-tile';
 import { Client } from 'src/app/models/client';
 import { ApiServiceService } from 'src/app/services/api-service.service';
@@ -121,9 +120,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.setCardBanners();
       }
     );
-    console.log(tiles);
-    console.log(this.tiels);
-    console.log(this.cols);
   }
   setCommonData(): void {
     const toDate = (str: Date) =>
@@ -213,6 +209,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           prix - this.charges[index]?.totalExpenses - this.comissionTotale[key],
       })
     );
+
     //reducer para extraer los simatorios anteriores ewn un solo array
     this.profitTotalReel = arrayAll.reduce(
       (a, b) => [...a, b.profitTotalReel],

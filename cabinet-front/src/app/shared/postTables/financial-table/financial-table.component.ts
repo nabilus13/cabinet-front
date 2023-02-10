@@ -61,55 +61,62 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
     const month = monthConst;
     const mapPrix = data.reduce(
       (a, b) => {
-        const m = toDate(b.dateReception).getMonth();
+        const m = this.getFechaActual(toDate(b.dateReception));
         a[m] = a[m] ? +a[m] + b.prix : +b.prix;
         return a;
       },
       {} as {
-        [index: number]: number;
+        [index: string]: number;
       }
     );
     const mapTotalCaisse = data.reduce(
       (a, b) => {
-        const m = toDate(b.dateReception).getMonth();
+        const m = this.getFechaActual(toDate(b.dateReception));
         a[m] = a[m] ? +a[m] + b.totalCaisse : +b.totalCaisse;
         return a;
       },
       {} as {
-        [index: number]: number;
+        [index: string]: number;
       }
     );
-    console.log(mapTotalCaisse);
-
     const mapComission = data.reduce(
       (a, b) => {
-        const m = toDate(b.dateReception).getMonth();
+        const m = this.getFechaActual(toDate(b.dateReception));
+        // toDate(b.dateReception).getMonth() +
+        // '-' +
+        // toDate(b.dateReception).getFullYear;
         if (!!b?.comission) {
           a[m] = a[m] ? +a[m] + b?.comission : +b.comission;
         }
         return a;
       },
       {} as {
-        [index: number]: number;
+        [index: string]: number;
       }
     );
-
     this.finantialContentTable = Object.entries(mapPrix).map(
       ([key, prix], index) => ({
         prix,
-        totalCaisse: mapTotalCaisse[+key],
-        comission: mapComission[+key],
-        mois: month[+key],
+        totalCaisse: mapTotalCaisse[key],
+        comission: mapComission[key],
+        mois: key,
         charges: this.charges[index]?.totalExpenses,
         profitReel:
-          mapTotalCaisse[+key] -
+          mapTotalCaisse[key] -
           this.charges[index]?.totalExpenses -
-          mapComission[+key],
+          mapComission[key],
         profitTheorique:
-          prix - this.charges[index]?.totalExpenses - mapComission[+key],
+          prix - this.charges[index]?.totalExpenses - mapComission[key],
       })
     );
+
     this.dataSource = this.finantialContentTable;
+  }
+
+  getFechaActual(fecha: Date): string {
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fecha.getFullYear().toString();
+    return `${mes}-${anio}`;
   }
   public getTotalCost(element: string): number {
     switch (element) {
@@ -153,9 +160,4 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
         return 0;
     }
   }
-}
-function finalize(
-  arg0: (data: any) => void
-): import('rxjs').OperatorFunction<Client[], unknown> {
-  throw new Error('Function not implemented.');
 }
