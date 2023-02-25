@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { expeneses } from '../mocks/data-base-mock';
 import { Client } from '../models/client';
@@ -54,5 +54,38 @@ export class ApiServiceService {
       //   observe: 'response',
       // }),
     });
+  }
+
+  updateClient(
+    client: Client,
+    id: number
+  ): Observable<{ client: any; status: number }> {
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    };
+
+    return this.http
+      .put<Client>(
+        `${environment.API_BACKEND}clients/${id}`,
+        client,
+        httpOptions
+      )
+      .pipe(
+        tap((_) => console.log(`updated client id=${id}`)),
+
+        map((response) => ({ client: response, status: 200 })),
+        catchError((error) => {
+          console.error(error);
+          console.log(`operation failed: ${error.message}`);
+          return of({ client: null, status: error.status });
+        })
+      );
+  }
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error);
+      console.log(`${operation} failed: ${error.message}`);
+      return of(result as T);
+    };
   }
 }

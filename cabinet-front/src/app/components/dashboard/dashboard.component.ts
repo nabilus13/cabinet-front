@@ -142,13 +142,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .reduce(
         (a, b) => {
           const m = toDate(b.dateReception).getMonth();
-          a[m] = a[m]
-            ? +a[m] + b.prix - b.totalCaisse
+          let monthLiteral = this.months[toDate(b.dateReception).getMonth()];
+          let yr = toDate(b.dateReception).getFullYear().toString().slice(-2);
+          //identificador para sacar cada año y diferenciar por años
+          let monthYear = `${monthLiteral}-${yr}`;
+          a[monthYear] = a[monthYear]
+            ? +a[monthYear] + b.prix - b.totalCaisse
             : +b.prix - b.totalCaisse;
           return a;
         },
         {} as {
-          [index: number]: number;
+          [index: string]: number;
         }
       );
 

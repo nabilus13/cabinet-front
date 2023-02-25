@@ -36,6 +36,7 @@ export class ColumnChartComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.totalDette);
     if (changes.data) {
       this.setHighChartColumn();
     }

@@ -12,7 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
-import { Client } from 'src/app/models/client';
+import { Client, ResultDialog, TypeRequest } from 'src/app/models/client';
 import { ApiServiceService } from 'src/app/services/api-service.service';
 import { DialogFormComponentComponent } from '../../dialog-form-component/dialog-form-component.component';
 
@@ -32,6 +32,7 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription: Subscription;
   showModal = false;
   newClient: Client;
+
   title = 'CLient';
   constructor(
     private serviceApi: ApiServiceService,
@@ -62,6 +63,7 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
     'prix',
     'comission',
     'totalCaisse',
+    'ActionClient',
   ];
 
   data: any[] = [];
@@ -71,31 +73,105 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
     //   console.log(res);
     // });
   }
-  openModal() {
+  openModal(client?: Client, type?: string) {
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.autoFocus = false;
     dialogConfig.width = '800px';
     dialogConfig.data = {
-      id: 1,
+      id: client?.id,
       title: 'Saisir les données du client',
+      client: client,
+      type: type,
     };
 
     const dialogRef = this.dialog.open(
       DialogFormComponentComponent,
       dialogConfig
     );
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(result); //returns undefined
-      if (result && !result.isClosing) {
-        this.serviceApi.apiSaveClient(result).subscribe((res) => {
+    dialogRef.afterClosed().subscribe((result: ResultDialog) => {
+      if (
+        result.type === TypeRequest.Save &&
+        !result.isClosing &&
+        !!result.clientData
+      ) {
+        this.serviceApi.apiSaveClient(result.clientData).subscribe((res) => {
           if (res?.status == 201) {
             this.serviceApi.cacheInitialized = false;
             this.getData();
           }
         });
+      } else if (
+        result.type === TypeRequest.Update &&
+        !result.isClosing &&
+        !!result.clientData
+      ) {
+        this.serviceApi
+          .updateClient(result.clientData, result.clientData?.id)
+          .subscribe((res) => {
+            this.serviceApi.cacheInitialized = false;
+            this.getData();
+            console.log(res);
+          });
+      } else {
+        if (
+          result.type === TypeRequest.Reglement &&
+          !result.isClosing &&
+          !!result.clientData
+        ) {
+          let clientToSave: any = {};
+          clientToSave.totalCaisse = result.clientData.totalCaisse;
+          clientToSave.commentaire = result.clientData.commentaire;
+          clientToSave.dateLivraison = result.clientData.dateLivraison;
+          clientToSave.dateReception = result.clientData.dateReception;
+          clientToSave.dossier = result.clientData.dossier;
+          clientToSave.lieux = result.clientData.lieux;
+          clientToSave.nombrePlans = result.clientData.nombrePlans;
+          clientToSave.prix = result.clientData.prix;
+          clientToSave.representant = result.clientData.representant;
+          clientToSave.situation = result.clientData.situation;
+          clientToSave.telephone = result.clientData.telephone;
+          clientToSave.totalCaisse = result.clientData.totalCaisse;
+          clientToSave.client = result.clientData.client;
+
+          let clientToupdate = this.getUpdatedClient(result.clientData);
+          this.serviceApi
+            .updateClient(clientToupdate, clientToupdate?.id)
+            .subscribe((res) => {
+              if (res?.status == 200) {
+                this.serviceApi.apiSaveClient(clientToSave).subscribe((res) => {
+                  if (res?.status == 201) {
+                    this.serviceApi.cacheInitialized = false;
+                    this.getData();
+                  }
+                });
+              }
+            });
+
+          // this.serviceApi
+          //   .updateClient(result.clientData, result.clientData?.id)
+          //   .subscribe((res) => {
+          //     this.serviceApi.cacheInitialized = false;
+          //     this.getData();
+          //     console.log(res);
+          //   });
+        }
       }
     });
+  }
+  getUpdatedClient(client: Client): Client {
+    let clienToUpdate: Client;
+    let oldClient: Client[] = this.dataSource.data.filter(
+      (cl) => cl.id === client.id
+    );
+    clienToUpdate = oldClient[0];
+    clienToUpdate = {
+      ...clienToUpdate,
+      prix: oldClient[0].prix - client.totalCaisse,
+    };
+    console.log(oldClient);
+    console.log(clienToUpdate);
+
+    return clienToUpdate;
   }
   async getData() {
     this.subscription = await this.serviceApi.apiAllClients.subscribe(
@@ -119,15 +195,11 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDelete(client: Client) {
-    // const deleteAll = confirm(
-    //   'Attention ! Êtes-vous sûr de vouloir supprimer le client suivant ?'
-    // );
     this.newClient = client;
     const initialState = {
       data: client,
     };
     this.modalRef = this.modalService.show(this.pop, { initialState });
-    // this.modalRef.content.data = client;
 
     console.log(client?.id);
   }

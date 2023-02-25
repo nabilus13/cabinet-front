@@ -53,7 +53,6 @@ export class LineChartComponent
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.data) {
-      console.log('pasa');
       this.setHighChartLine();
     }
   }
@@ -78,10 +77,6 @@ export class LineChartComponent
     console.log(this.categoriesMonth);
     console.log(this.caisseTotalReel);
     console.log(Object.values(this.caisseTotalReel));
-    console.log(Object.values(this.caisseTotaTeorique));
-    console.log(Object.values(this.comissionTotale));
-    console.log(this.profitTotalReel);
-    console.log(this.profitTotalTheorique);
 
     this.chartOptions = {
       chart: {

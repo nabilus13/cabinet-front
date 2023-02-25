@@ -19,6 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { BsModalRef, ModalModule } from 'ngx-bootstrap/modal';
@@ -78,6 +79,7 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     MatNativeDateModule,
     MatDialogModule,
     ModalModule.forRoot(),
+    MatTooltipModule,
   ],
   exports: [
     HeaderComponent,

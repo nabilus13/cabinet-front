@@ -12,4 +12,17 @@ export interface Client {
   prix: number;
   comission?: number | null;
   totalCaisse: number;
+  commentaire?: string;
+}
+export enum TypeRequest {
+  Save = 'Save',
+  Update = 'Update',
+  Reglement = 'Reglement',
+  Close = 'Close',
+}
+
+export interface ResultDialog {
+  clientData?: Client;
+  type?: TypeRequest;
+  isClosing?: boolean;
 }
