@@ -37,6 +37,7 @@ import { CardBannerComponent } from './widgets/card-banner/card-banner.component
 import { ColumnChartComponent } from './widgets/column-chart/column-chart.component';
 import { LineChartComponent } from './widgets/line-chart/line-chart.component';
 import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
+import { CustomValidatorDirective } from './custom-validator.directive';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
     ExpensesTableComponent,
     DialogFormComponentComponent,
     DialogConfirmationComponent,
+    CustomValidatorDirective,
   ],
   imports: [
     CommonModule,

@@ -93,7 +93,7 @@ export class DialogFormComponentComponent implements OnInit {
         Validators.pattern('^[0-9]*$'),
       ]),
       comission: new FormControl(''),
-      totalCaisse: new FormControl('', [
+      totalCaisse: new FormControl(0, [
         Validators.required,
         Validators.pattern('^[0-9]*$'),
       ]),
@@ -106,6 +106,9 @@ export class DialogFormComponentComponent implements OnInit {
     if (!!this.data?.client) {
       this.setValues(this.data.client);
     }
+  }
+  public getPrix(): number {
+    return this.form.get('prix')?.value ? this.form.get('prix')?.value : 0;
   }
   setValues(cl: Client) {
     cl.dateReception
@@ -136,7 +139,7 @@ export class DialogFormComponentComponent implements OnInit {
     if (this.data && this.data?.type == 'Update') {
       cl.prix ? this.form.get('prix')?.setValue(cl.prix) : '';
     } else {
-      cl.prix ? this.form.get('prix')?.setValue(cl.totalCaisse) : '';
+      cl.prix ? this.form.get('prix')?.setValue(cl.prix - cl.totalCaisse) : '';
     }
 
     cl.comission ? this.form.get('comission')?.setValue(cl.comission) : '';

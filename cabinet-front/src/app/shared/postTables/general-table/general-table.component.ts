@@ -118,6 +118,7 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
           !result.isClosing &&
           !!result.clientData
         ) {
+          console.log(result);
           let clientToSave: any = {};
           clientToSave.totalCaisse = result.clientData.totalCaisse;
           clientToSave.commentaire = result.clientData.commentaire;
@@ -126,9 +127,9 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
           clientToSave.dossier = result.clientData.dossier;
           clientToSave.lieux = result.clientData.lieux;
           clientToSave.nombrePlans = result.clientData.nombrePlans;
-          clientToSave.prix = result.clientData.prix;
+          clientToSave.prix = result.clientData.totalCaisse;
           clientToSave.representant = result.clientData.representant;
-          clientToSave.situation = result.clientData.situation;
+          clientToSave.situation = 'Livré';
           clientToSave.telephone = result.clientData.telephone;
           clientToSave.totalCaisse = result.clientData.totalCaisse;
           clientToSave.client = result.clientData.client;
@@ -146,30 +147,24 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
               }
             });
-
-          // this.serviceApi
-          //   .updateClient(result.clientData, result.clientData?.id)
-          //   .subscribe((res) => {
-          //     this.serviceApi.cacheInitialized = false;
-          //     this.getData();
-          //     console.log(res);
-          //   });
         }
       }
     });
   }
   getUpdatedClient(client: Client): Client {
     let clienToUpdate: Client;
-    let oldClient: Client[] = this.dataSource.data.filter(
+    let oldClient: Client = this.dataSource.data.find(
       (cl) => cl.id === client.id
     );
-    clienToUpdate = oldClient[0];
+    clienToUpdate = oldClient;
     clienToUpdate = {
       ...clienToUpdate,
-      prix: oldClient[0].prix - client.totalCaisse,
+      prix: oldClient?.prix - client.totalCaisse,
+      situation:
+        oldClient?.prix - oldClient?.totalCaisse - client?.totalCaisse == 0
+          ? 'Livré'
+          : oldClient?.situation,
     };
-    console.log(oldClient);
-    console.log(clienToUpdate);
 
     return clienToUpdate;
   }
