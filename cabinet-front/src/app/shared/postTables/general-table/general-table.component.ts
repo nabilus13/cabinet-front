@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
@@ -37,7 +38,8 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private serviceApi: ApiServiceService,
     private dialog: MatDialog,
-    private readonly modalService: BsModalService
+    private readonly modalService: BsModalService,
+    private cd: ChangeDetectorRef
   ) {}
   ngOnDestroy(): void {
     if (this.subscription) {
@@ -46,6 +48,10 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   ngAfterViewInit(): void {
     this.getData();
+    //to avoid de ng1000 error detection change
+    this.cd.detectChanges();
+    // setTimeout(() => {
+    // }, 500);
     // this.dataSource.paginator = this.paginator;
     // this.dataSource.sort = this.sort;
   }
@@ -110,7 +116,6 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
           .subscribe((res) => {
             this.serviceApi.cacheInitialized = false;
             this.getData();
-            console.log(res);
           });
       } else {
         if (
@@ -118,7 +123,6 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
           !result.isClosing &&
           !!result.clientData
         ) {
-          console.log(result);
           let clientToSave: any = {};
           clientToSave.totalCaisse = result.clientData.totalCaisse;
           clientToSave.commentaire = result.clientData.commentaire;
@@ -184,9 +188,6 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-  onEdit(client: any) {
-    console.log(client?.id);
   }
 
   onDelete(client: Client) {

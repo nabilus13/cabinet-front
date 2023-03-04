@@ -12,14 +12,10 @@ import { AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
     },
   ],
 })
+/*Directiva para poder customizar el form del pop up de reglement dossier*/
 export class CustomValidatorDirective implements Validator {
   @Input('appCustomValidator') appCustomValidator: number;
   validate(ctrl: AbstractControl): { [key: string]: boolean } | null {
-    console.log('PPPPP', ctrl.value);
-    console.log(this.appCustomValidator);
     return ctrl.value > this.appCustomValidator ? { invalidValue: true } : null;
   }
-  // registerOnValidatorChange?(fn: () => void): void {
-  //   throw new Error('Method not implemented.');
-  // }
 }

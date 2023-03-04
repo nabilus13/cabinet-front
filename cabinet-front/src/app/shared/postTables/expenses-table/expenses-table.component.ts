@@ -118,7 +118,7 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
     });
 
     const entries = Object.entries(mapClients).map(([key, client]) => ({
-      mois: month[toDate(client.dateReception).getMonth()],
+      mois: this.getFechaActual(toDate(client.dateReception)),
       dateReception: client.dateReception,
       client: client.client,
       representant: client.representant,
@@ -134,21 +134,21 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
       })
       .reduce(
         (a, b) => {
-          const m = toDate(b.dateReception).getMonth();
+          const m = this.getFechaActual(toDate(b.dateReception));
           a[m] = a[m]
             ? +a[m] + b.prix - b.totalCaisse
             : +b.prix - b.totalCaisse;
           return a;
         },
         {} as {
-          [index: number]: number;
+          [index: string]: number;
         }
       );
     this.expensescontentTable = Object.entries(mapDette).map(
       ([key, totalDette]) => ({
         clients: [],
-        mois: month[+key],
-        dette: totalDette,
+        mois: key,
+        dette: +(totalDette * 0.9).toFixed(0),
       })
     );
 
@@ -167,6 +167,11 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
         }
       });
     });
+  }
+  getFechaActual(fecha: Date): string {
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fecha.getFullYear().toString();
+    return `${mes}-${anio}`;
   }
   toggleRow(element: ExpensesContentTable) {
     element.clients &&

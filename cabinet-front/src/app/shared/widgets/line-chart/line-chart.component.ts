@@ -74,10 +74,6 @@ export class LineChartComponent
   }
   // HC_exporting(highcharts);
   setHighChartLine(): void {
-    console.log(this.categoriesMonth);
-    console.log(this.caisseTotalReel);
-    console.log(Object.values(this.caisseTotalReel));
-
     this.chartOptions = {
       chart: {
         type: 'spline',

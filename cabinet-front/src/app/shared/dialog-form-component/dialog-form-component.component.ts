@@ -212,9 +212,5 @@ export class DialogFormComponentComponent implements OnInit {
     this.response.isClosing = true;
 
     this.dialogRef.close(this.response);
-
-    // const isoDate = new Date(localDate).toISOString().substring(0, 10);
-    // console.log(isoDate);
-    // this.dialogRef.close({ isClosing: true });
   }
 }

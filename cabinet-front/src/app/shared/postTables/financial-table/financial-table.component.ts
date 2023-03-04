@@ -18,12 +18,14 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
 
   dataSource: any[] = [];
   charges: any[] = [];
+  dateDebutReserve = '10-2022';
   displayedColumns: string[] = [
     'mois',
     'prix',
     'totalCaisse',
     'comission',
     'charges',
+    'reserveCaisse10prct',
     'profitReel',
     'profitTheorique',
   ];
@@ -101,16 +103,49 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
         comission: mapComission[key],
         mois: key,
         charges: this.charges[index]?.totalExpenses,
-        profitReel:
-          mapTotalCaisse[key] -
-          this.charges[index]?.totalExpenses -
-          mapComission[key],
-        profitTheorique:
-          prix - this.charges[index]?.totalExpenses - mapComission[key],
+        reserveCaisse10prct: this.getMoisDebutReserve(
+          key,
+          mapTotalCaisse[key],
+          this.charges[index]?.totalExpenses,
+          mapComission[key]
+        ),
+        profitReel: +(
+          (mapTotalCaisse[key] -
+            this.charges[index]?.totalExpenses -
+            mapComission[key]) *
+          0.9
+        ).toFixed(0),
+
+        profitTheorique: +(
+          0.9 *
+          (prix - this.charges[index]?.totalExpenses - mapComission[key])
+        ).toFixed(0),
       })
     );
 
     this.dataSource = this.finantialContentTable;
+  }
+
+  getMoisDebutReserve(
+    dateFinReserve: string,
+    caisse: number,
+    charges: number,
+    com: number
+  ): number {
+    let dateDebutString = `01-${this.dateDebutReserve}`;
+    const dateDebut = new Date(
+      dateDebutString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
+    );
+    let dateFinString = `01-${dateFinReserve}`;
+    const dateFin = new Date(
+      dateFinString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
+    );
+
+    if (dateFin < dateDebut) {
+      return 0;
+    } else {
+      return +((caisse - charges - com) * 0.1).toFixed(0);
+    }
   }
 
   getFechaActual(fecha: Date): string {
@@ -142,6 +177,12 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
         return this.finantialContentTable
           .map((t) => {
             return Number(t?.charges);
+          })
+          .reduce((acc, value) => acc + value, 0);
+      case 'reserveCaisse10prct':
+        return this.finantialContentTable
+          .map((t) => {
+            return Number(t?.reserveCaisse10prct);
           })
           .reduce((acc, value) => acc + value, 0);
       case 'profitReel':

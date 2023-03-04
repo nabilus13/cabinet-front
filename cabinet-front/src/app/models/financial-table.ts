@@ -4,6 +4,7 @@ export interface ContentFinantialTable {
   comission?: number | null | undefined;
   totalCaisse?: number;
   charges?: number;
+  reserveCaisse10prct?: number;
   profitReel?: number;
   profitTheorique?: number;
 }
