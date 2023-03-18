@@ -14,7 +14,7 @@ export class AuthenticationService {
   private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public login(user: User): Observable<HttpResponse<User>> {
     return this.http.post<User>(`${this.host}login`, user, {
@@ -33,6 +33,7 @@ export class AuthenticationService {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     localStorage.removeItem('users');
+    localStorage.removeItem('tableCharges');
   }
 
   public saveToken(token: string): void {

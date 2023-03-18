@@ -3,7 +3,7 @@ import {
   Input,
   OnChanges,
   OnInit,
-  SimpleChanges,
+  SimpleChanges
 } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import Data from 'highcharts/modules/data';
@@ -33,10 +33,10 @@ export class ColumnChartComponent implements OnInit, OnChanges {
 
   highcharts = Highcharts;
   chartOptions: Highcharts.Options = {};
-  constructor() {}
+  constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data) {
+    if (changes.data && changes.data.currentValue.length > 0) {
       this.setHighChartColumn();
     }
   }

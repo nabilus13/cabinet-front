@@ -1,8 +1,12 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CardBannerTile } from 'src/app/models/card-banner-tile';
+import { Charges, ChargesItem } from 'src/app/models/charges';
 import { Client } from 'src/app/models/client';
+import { Expenses } from 'src/app/models/financial-table';
+import { ApiChargesServices } from 'src/app/services/api-charges.service';
 import { ApiServiceService } from 'src/app/services/api-service.service';
 
 @Component({
@@ -27,12 +31,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // beneficio teorico quitando gastos
   profitTotalTheorique: number[];
   // array solo con totales de charges
-  chargesFixes: number[];
+  chargesFixes: number[] = [];
   // diferencia entre lo cobrado y lo que falta por cobrar del cliente
   totalDette: { [key: string]: number };
 
   //gastos
   charges: any[] = [];
+  chargesApi: Charges[] = [];
+  chargesMonth: { [key: string]: ChargesItem[] };
+  loaderEnabled: boolean;
+
+
 
   months = [
     'Jan',
@@ -67,8 +76,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   };
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private apiServiceService: ApiServiceService
+    private apiServiceService: ApiServiceService,
+    private apiServiceCharges: ApiChargesServices
   ) {
+    this.loaderEnabled = true;
+
     this.breakpointObserver
       .observe([
         Breakpoints.XSmall,
@@ -113,14 +125,57 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         this.charges = res;
       });
-    this.subscription = this.apiServiceService.apiAllClients.subscribe(
-      (res: Client[]) => {
-        this.data = res;
+
+    const obs1 = this.apiServiceCharges.apiAllCharges;
+
+    const obs2 = this.apiServiceService.apiAllClients;
+
+    this.subscription = forkJoin([obs1, obs2]).pipe(
+      map(([chargesResp, clientsRes]) => {
+        this.chargesApi = chargesResp;
+        this.setChargesData();
+
+        this.data = clientsRes;
         this.setCommonData();
         this.setCardBanners();
-      }
-    );
+
+
+
+      })
+    ).subscribe(() => {
+      this.loaderEnabled = false;
+    })
+
+
   }
+  setChargesData(): void {
+    const toDate = (str: Date) =>
+      new Date(str.toString().replace(/^(\d+)\/(\d+)\/(\d+)$/, '$2/$1/$3'));
+    //calclo de charges
+    this.chargesMonth = this.chargesApi.reduce(
+      (acc, b: Charges, currentIndex: number, array: Charges[]) => {
+        let monthLiteral = this.months[toDate(b.datePaiement).getMonth()];
+        let yr = toDate(b.datePaiement).getFullYear().toString().slice(-2);
+        //identificador para sacar cada año y deiferenciar
+        let monthAndYear = `${monthLiteral}-${yr}`;
+        const type = b.type.code;
+        const price = b.prix;
+        if (!acc[monthAndYear]) {
+          acc[monthAndYear] = [];
+        }
+
+        const typeIndex = acc[monthAndYear].findIndex((e) => e.id === type);
+        if (typeIndex === -1) {
+          acc[monthAndYear].push({ id: type ?? 'id', prix: price });
+        } else {
+          acc[monthAndYear][typeIndex].prix += price;
+        }
+
+        return acc;
+
+      }, {} as { [monthYear: string]: ChargesItem[] });
+  }
+
   setCommonData(): void {
     const toDate = (str: Date) =>
       new Date(str.toString().replace(/^(\d+)\/(\d+)\/(\d+)$/, '$2/$1/$3'));
@@ -133,6 +188,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (!this.categoriesMonth.includes(monthYear)) {
         this.categoriesMonth.push(monthYear);
       }
+
     });
 
     this.totalDette = this.data
@@ -184,6 +240,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         [monthYear: string]: number;
       }
     );
+
     this.comissionTotale = this.data.reduce(
       (a, b) => {
         let monthLiteral = this.months[toDate(b.dateReception).getMonth()];
@@ -220,18 +277,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       [] as number[]
     );
+
+
     this.profitTotalTheorique = arrayAll.reduce(
       (a, b) => [...a, b.profitTotalTheorique],
 
       [] as number[]
     );
-    this.chargesFixes = this.charges.reduce(
-      (a, b) => [...a, b.totalExpenses],
-      // const m = toDate(b.p).getMonth();
-      // a[m] = a[m] ? +a[m] + b.prix : +b.prix;
 
-      [] as number[]
-    );
+    if (this.chargesMonth != null) {
+      let result: Expenses[] = [];
+      for (const [month, values] of Object.entries(this.chargesMonth)) {
+        const total = values.reduce((acc, item) => acc + item.prix, 0);
+        this.chargesFixes.push(+total.toFixed(2));
+        result.push({ dateReception: month, totalExpenses: +total.toFixed(2) })
+      }
+
+      this.apiServiceCharges.setCharges(result);
+    }
+
+
+
   }
 
   setCardBanners() {

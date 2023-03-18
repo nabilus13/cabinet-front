@@ -2,6 +2,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+     "plugins": [
+      { "name": "typescript-tslint-plugin" }
+    ],
     "strictPropertyInitialization": false,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
@@ -15,8 +18,10 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2017",
-    "module": "es2020",
+     "module": "esnext",
+    "target": "es5",
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
@@ -24,5 +29,6 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "include": ["src/**/*.ts"]
 }

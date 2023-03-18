@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
+  SimpleChanges
 } from '@angular/core';
 import * as Highcharts from 'highcharts';
 // import exporting from 'highcharts/modules/exporting';
@@ -26,8 +26,7 @@ ExportData(Highcharts);
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent
-  implements OnInit, AfterViewInit, OnDestroy, OnChanges
-{
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @Input() data: Client[];
   @Input() months: string[];
   @Input() categoriesMonth: any[];
@@ -52,7 +51,7 @@ export class LineChartComponent
     // this.chartOptions = mockLineOptions;
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data) {
+    if (changes.data && changes.data.currentValue.length > 0) {
       this.setHighChartLine();
     }
   }

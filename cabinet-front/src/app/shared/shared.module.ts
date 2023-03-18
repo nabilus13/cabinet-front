@@ -24,10 +24,12 @@ import { RouterModule } from '@angular/router';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { BsModalRef, ModalModule } from 'ngx-bootstrap/modal';
 import { ApiServiceService } from '../services/api-service.service';
+import { CustomValidatorDirective } from './custom-validator.directive';
 import { DialogConfirmationComponent } from './dialog-confirmation/dialog-confirmation.component';
 import { DialogFormComponentComponent } from './dialog-form-component/dialog-form-component.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { CostsTableComponent } from './postTables/costs-table/costs-table.component';
 import { ExpensesTableComponent } from './postTables/expenses-table/expenses-table.component';
 import { FinancialTableComponent } from './postTables/financial-table/financial-table.component';
 import { GeneralTableComponent } from './postTables/general-table/general-table.component';
@@ -37,7 +39,7 @@ import { CardBannerComponent } from './widgets/card-banner/card-banner.component
 import { ColumnChartComponent } from './widgets/column-chart/column-chart.component';
 import { LineChartComponent } from './widgets/line-chart/line-chart.component';
 import { PieChartComponent } from './widgets/pie-chart/pie-chart.component';
-import { CustomValidatorDirective } from './custom-validator.directive';
+import { StackedChartComponent } from './widgets/stacked-chart/stacked-chart.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,8 @@ import { CustomValidatorDirective } from './custom-validator.directive';
     DialogFormComponentComponent,
     DialogConfirmationComponent,
     CustomValidatorDirective,
+    CostsTableComponent,
+    StackedChartComponent,
   ],
   imports: [
     CommonModule,
@@ -94,8 +98,10 @@ import { CustomValidatorDirective } from './custom-validator.directive';
     GeneralTableComponent,
     FinancialTableComponent,
     ExpensesTableComponent,
+    CostsTableComponent,
+    StackedChartComponent,
   ],
   entryComponents: [DialogFormComponentComponent, DialogConfirmationComponent],
   providers: [ApiServiceService, DatePipe, BsModalRef],
 })
-export class SharedModule {}
+export class SharedModule { }

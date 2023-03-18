@@ -3,8 +3,9 @@ import { Subscription } from 'rxjs';
 import { Client } from 'src/app/models/client';
 import {
   ContentFinantialTable,
-  monthConst,
+  monthConst
 } from 'src/app/models/financial-table';
+import { ApiChargesServices } from 'src/app/services/api-charges.service';
 import { ApiServiceService } from 'src/app/services/api-service.service';
 
 @Component({
@@ -33,7 +34,8 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
   finantialContentTable: ContentFinantialTable[];
   tableFooterColumns: string[] = ['total'];
 
-  constructor(private apiServiceService: ApiServiceService) {
+  constructor(private apiServiceService: ApiServiceService,
+    private apiServiceCharges: ApiChargesServices,) {
     this.loaderEnabled = true;
   }
   ngOnDestroy(): void {
@@ -43,9 +45,9 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.apiServiceService.getExpenses().subscribe((res) => {
-      this.charges = res;
-    });
+    const hhh = localStorage.getItem('tableCharges');
+    this.charges = JSON.parse(hhh ?? '');
+
     this.subscription = this.apiServiceService.apiAllClients.subscribe(
       (res) => {
         if (!!res && this.charges.length > 0) {
@@ -102,7 +104,7 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
         totalCaisse: mapTotalCaisse[key],
         comission: mapComission[key],
         mois: key,
-        charges: this.charges[index]?.totalExpenses,
+        charges: this.charges[index]?.totalExpenses.toFixed(0),
         reserveCaisse10prct: this.getMoisDebutReserve(
           key,
           mapTotalCaisse[key],

@@ -33,13 +33,11 @@ export class ApiServiceService {
   apiGetClients(): Observable<Client[]> {
     return this.http.get<Client[]>(`${environment.API_BACKEND}clients`);
   }
-
   apiGetClientsByDate(date: String): Observable<Client[]> {
     return this.http.get<Client[]>(
       `${environment.API_BACKEND}clientsByDate?date=${date}`
     );
   }
-
   apiSaveClient(client: Client): Observable<any> {
     return this.http.post<any>(`${environment.API_BACKEND}clients`, client, {
       // el observe response es el q hace q mi respuesta sea un objeto con body status y hhttpheaders

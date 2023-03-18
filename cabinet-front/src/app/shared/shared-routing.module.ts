@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CostsTableComponent } from './postTables/costs-table/costs-table.component';
 import { ExpensesTableComponent } from './postTables/expenses-table/expenses-table.component';
 import { FinancialTableComponent } from './postTables/financial-table/financial-table.component';
 import { GeneralTableComponent } from './postTables/general-table/general-table.component';
@@ -19,8 +20,12 @@ const routes: Routes = [
     component: FinancialTableComponent,
   },
   {
-    path: 'expenses',
+    path: 'debts',
     component: ExpensesTableComponent,
+  },
+  {
+    path: 'costs',
+    component: CostsTableComponent,
   },
 ];
 
