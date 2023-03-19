@@ -14,4 +14,8 @@ export interface TypeCharges {
 export interface ChargesItem {
   prix: number;
   id: string;
+  listMonth?: Charges[];
+}
+export interface ListeChargesItems {
+  [key: string]: ChargesItem[];
 }

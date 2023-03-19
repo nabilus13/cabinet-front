@@ -37,11 +37,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   //gastos
   charges: any[] = [];
+  result: Expenses[] = [];
   chargesApi: Charges[] = [];
   chargesMonth: { [key: string]: ChargesItem[] };
   loaderEnabled: boolean;
-
-
 
   months = [
     'Jan',
@@ -130,23 +129,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     const obs2 = this.apiServiceService.apiAllClients;
 
-    this.subscription = forkJoin([obs1, obs2]).pipe(
-      map(([chargesResp, clientsRes]) => {
-        this.chargesApi = chargesResp;
-        this.setChargesData();
+    this.subscription = forkJoin([obs1, obs2])
+      .pipe(
+        map(([chargesResp, clientsRes]) => {
+          this.chargesApi = chargesResp;
+          this.setChargesData();
 
-        this.data = clientsRes;
-        this.setCommonData();
-        this.setCardBanners();
-
-
-
-      })
-    ).subscribe(() => {
-      this.loaderEnabled = false;
-    })
-
-
+          this.data = clientsRes;
+          this.setCommonData();
+          this.setCardBanners();
+        })
+      )
+      .subscribe(() => {
+        this.loaderEnabled = false;
+      });
   }
   setChargesData(): void {
     const toDate = (str: Date) =>
@@ -166,14 +162,35 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         const typeIndex = acc[monthAndYear].findIndex((e) => e.id === type);
         if (typeIndex === -1) {
-          acc[monthAndYear].push({ id: type ?? 'id', prix: price });
+          acc[monthAndYear].push({
+            id: type ?? 'id',
+            prix: price,
+            listMonth: [b],
+          });
         } else {
           acc[monthAndYear][typeIndex].prix += price;
+          acc[monthAndYear][typeIndex].listMonth?.push(b);
         }
 
         return acc;
+      },
+      {} as { [monthYear: string]: ChargesItem[] }
+    );
 
-      }, {} as { [monthYear: string]: ChargesItem[] });
+    if (this.chargesMonth != null) {
+      console.log(this.chargesMonth);
+      for (const [month, values] of Object.entries(this.chargesMonth)) {
+        const total = values.reduce((acc, item) => acc + item.prix, 0);
+        this.chargesFixes.push(+total.toFixed(2));
+        this.result.push({
+          dateReception: month,
+          totalExpenses: +total.toFixed(2),
+        });
+      }
+
+      this.apiServiceCharges.setCharges(this.result);
+      this.apiServiceCharges.setListCharges(this.chargesMonth);
+    }
   }
 
   setCommonData(): void {
@@ -188,7 +205,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (!this.categoriesMonth.includes(monthYear)) {
         this.categoriesMonth.push(monthYear);
       }
-
     });
 
     this.totalDette = this.data
@@ -264,10 +280,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ([key, prix], index) => ({
         profitTotalReel:
           this.caisseTotalReel[key] -
-          this.charges[index]?.totalExpenses -
+          this.result[index]?.totalExpenses -
           this.comissionTotale[key],
         profitTotalTheorique:
-          prix - this.charges[index]?.totalExpenses - this.comissionTotale[key],
+          prix - this.result[index]?.totalExpenses - this.comissionTotale[key],
       })
     );
 
@@ -278,26 +294,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       [] as number[]
     );
 
-
     this.profitTotalTheorique = arrayAll.reduce(
       (a, b) => [...a, b.profitTotalTheorique],
 
       [] as number[]
     );
 
-    if (this.chargesMonth != null) {
-      let result: Expenses[] = [];
-      for (const [month, values] of Object.entries(this.chargesMonth)) {
-        const total = values.reduce((acc, item) => acc + item.prix, 0);
-        this.chargesFixes.push(+total.toFixed(2));
-        result.push({ dateReception: month, totalExpenses: +total.toFixed(2) })
-      }
-
-      this.apiServiceCharges.setCharges(result);
-    }
-
-
-
+    console.log(this.profitTotalTheorique);
   }
 
   setCardBanners() {

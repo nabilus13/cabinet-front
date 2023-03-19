@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { Client } from 'src/app/models/client';
 import {
   ContentFinantialTable,
-  monthConst
+  monthConst,
 } from 'src/app/models/financial-table';
 import { ApiChargesServices } from 'src/app/services/api-charges.service';
 import { ApiServiceService } from 'src/app/services/api-service.service';
@@ -34,8 +34,10 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
   finantialContentTable: ContentFinantialTable[];
   tableFooterColumns: string[] = ['total'];
 
-  constructor(private apiServiceService: ApiServiceService,
-    private apiServiceCharges: ApiChargesServices,) {
+  constructor(
+    private apiServiceService: ApiServiceService,
+    private apiServiceCharges: ApiChargesServices
+  ) {
     this.loaderEnabled = true;
   }
   ngOnDestroy(): void {
@@ -45,8 +47,8 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const hhh = localStorage.getItem('tableCharges');
-    this.charges = JSON.parse(hhh ?? '');
+    const tableCharges = localStorage.getItem('tableCharges');
+    this.charges = JSON.parse(tableCharges ?? '');
 
     this.subscription = this.apiServiceService.apiAllClients.subscribe(
       (res) => {
@@ -111,21 +113,66 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
           this.charges[index]?.totalExpenses,
           mapComission[key]
         ),
-        profitReel: +(
-          (mapTotalCaisse[key] -
-            this.charges[index]?.totalExpenses -
-            mapComission[key]) *
-          0.9
-        ).toFixed(0),
+        profitReel: this.getMoisDebutReserveProfitReel(
+          key,
+          mapTotalCaisse[key],
+          this.charges[index]?.totalExpenses,
+          mapComission[key]
+        ),
 
-        profitTheorique: +(
-          0.9 *
-          (prix - this.charges[index]?.totalExpenses - mapComission[key])
-        ).toFixed(0),
+        profitTheorique: this.getMoisDebutReserveProfitReel(
+          key,
+          prix,
+          this.charges[index]?.totalExpenses,
+          mapComission[key]
+        ),
       })
     );
 
     this.dataSource = this.finantialContentTable;
+  }
+
+  getMoisDebutReserveProfitTheorique(
+    dateFinReserve: string,
+    prix: number,
+    charges: number,
+    com: number
+  ): number {
+    let dateDebutString = `01-${this.dateDebutReserve}`;
+    const dateDebut = new Date(
+      dateDebutString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
+    );
+    let dateFinString = `01-${dateFinReserve}`;
+    const dateFin = new Date(
+      dateFinString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
+    );
+
+    if (dateFin < dateDebut) {
+      return +(prix - charges - com).toFixed(0);
+    } else {
+      return +((prix - charges - com) * 0.9).toFixed(0);
+    }
+  }
+  getMoisDebutReserveProfitReel(
+    dateFinReserve: string,
+    caisse: number,
+    charges: number,
+    com: number
+  ): number {
+    let dateDebutString = `01-${this.dateDebutReserve}`;
+    const dateDebut = new Date(
+      dateDebutString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
+    );
+    let dateFinString = `01-${dateFinReserve}`;
+    const dateFin = new Date(
+      dateFinString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
+    );
+
+    if (dateFin < dateDebut) {
+      return +(caisse - charges - com).toFixed(0);
+    } else {
+      return +((caisse - charges - com) * 0.9).toFixed(0);
+    }
   }
 
   getMoisDebutReserve(

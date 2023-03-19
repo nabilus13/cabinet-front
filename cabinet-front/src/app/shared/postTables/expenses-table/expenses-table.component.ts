@@ -64,6 +64,7 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
   ];
   expandedElement: ExpensesContentTable | null;
   subscription: Subscription;
+  dateDebutReserve = '10-2022';
 
   constructor(
     private serviceApi: ApiServiceService,
@@ -108,6 +109,7 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
     });
     console.log(this.usersData);
     this.dataSource = new MatTableDataSource(this.usersData);
+    console.log('GGGgg', this.dataSource);
   }
   initilizeData(data: Client[]) {
     const toDate = (str: Date) =>
@@ -144,11 +146,13 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
           [index: string]: number;
         }
       );
+    console.log(mapDette);
+
     this.expensescontentTable = Object.entries(mapDette).map(
       ([key, totalDette]) => ({
         clients: [],
         mois: key,
-        dette: +(totalDette * 0.9).toFixed(0),
+        dette: this.getMoisDebutReserveDette(key, totalDette),
       })
     );
 
@@ -167,6 +171,22 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
         }
       });
     });
+  }
+  getMoisDebutReserveDette(dateFinReserve: string, totalDette: number): number {
+    let dateDebutString = `01-${this.dateDebutReserve}`;
+    const dateDebut = new Date(
+      dateDebutString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
+    );
+    let dateFinString = `01-${dateFinReserve}`;
+    const date = new Date(
+      dateFinString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
+    );
+
+    if (date < dateDebut) {
+      return +totalDette.toFixed(0);
+    } else {
+      return +(totalDette * 0.9).toFixed(0);
+    }
   }
   getFechaActual(fecha: Date): string {
     const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');

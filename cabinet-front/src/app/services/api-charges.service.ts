@@ -3,22 +3,24 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Charges } from '../models/charges';
+import { Charges, ChargesItem } from '../models/charges';
 import { Expenses } from '../models/financial-table';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiChargesServices {
   public cacheCharges$: Observable<Charges[]>;
   public cacheInitialized = false;
   // private charges = new BehaviorSubject<Expenses[]>([]);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   setCharges(value: Expenses[]) {
-
     localStorage.setItem('tableCharges', JSON.stringify(value));
+  }
+  setListCharges(value: { [monthYear: string]: ChargesItem[] }) {
+    localStorage.setItem('tableListCharges', JSON.stringify(value));
   }
 
   get apiAllCharges() {

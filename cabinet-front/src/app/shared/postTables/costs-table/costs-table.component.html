@@ -1,1 +1,37 @@
 <p>costs-table works!</p>
+
+<table
+  mat-table
+  #outerSort="matSort"
+  [dataSource]="dataSource"
+  multiTemplateDataRows
+  class="mat-elevation-z8"
+  matSort
+>
+  <ng-container
+    matColumnDef="{{ column }}"
+    *ngFor="let column of columnsToDisplay"
+  >
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      {{ column | uppercase }}
+    </th>
+    <td mat-cell *matCellDef="let element">
+      {{ column === "mois" ? element[0] : getTotalType(element[1]) }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef>
+      {{ column === "mois" ? "Total" : getTotalCost() }}
+    </td>
+  </ng-container>
+
+  <!-- //detail header footer -->
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr
+    mat-row
+    *matRowDef="let element; columns: columnsToDisplay"
+    [class.example-element-row]="element.clients?.data.length"
+    [class.example-expanded-row]="expandedElement === element"
+  ></tr>
+  <tr mat-footer-row *matFooterRowDef="columnsToDisplay"></tr>
+
+  <tr mat-row class="example-detail-row"></tr>
+</table>
