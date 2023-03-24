@@ -350,3 +350,55 @@ export const mockPieOptions: Highcharts.Options = {
     },
   ],
 };
+
+export const gg = {
+  'May-22': [
+    {
+      id: 'AUTRES',
+      prix: 0,
+      listMonth: [
+        {
+          datePaiement: '2022-05-01',
+          description: 'Rien',
+          prix: 0,
+          type: {
+            id: 9,
+            code: 'AUTRES',
+            libelle: 'Autres',
+          },
+          id: 1,
+        },
+      ],
+    },
+  ],
+  'Jun-22': [
+    {
+      id: 'TRANSPORT',
+      prix: 2795,
+      listMonth: [
+        {
+          datePaiement: '2022-06-01',
+          description: 'Gasoil',
+          prix: 100,
+          type: {
+            id: 4,
+            code: 'TRANSPORT',
+            libelle: 'Transport et logistique',
+          },
+          id: 2,
+        },
+        {
+          datePaiement: '2022-06-02',
+          description: 'Gasoil',
+          prix: 100,
+          type: {
+            id: 4,
+            code: 'TRANSPORT',
+            libelle: 'Transport et logistique',
+          },
+          id: 4,
+        },
+      ],
+    },
+  ],
+};

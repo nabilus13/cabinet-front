@@ -33,8 +33,7 @@ export class CostsTableComponent implements OnInit {
   loaderEnabled: boolean;
 
   columnsToDisplay = ['mois', 'charges'];
-  innerDisplayedColumns = ['type', 'total'];
-  innerInnerDisplayedColumns = ['datePaiement', 'description', 'prix'];
+  innerDisplayedColumns = ['id', 'prix'];
 
   constructor(private ngZone: NgZone) {}
 
@@ -43,27 +42,28 @@ export class CostsTableComponent implements OnInit {
     this.usersData = JSON.parse(tableCharges ?? '');
 
     this.dataSource = new MatTableDataSource(Object.entries(this.usersData));
-    this.totalTypeCharges = this.dataSource.data.reduce(
+    console.log(this.dataSource?.data);
+    this.totalTypeCharges = this.dataSource?.data.reduce(
       (acc, element) => acc + this.getTotalType(element[1]),
       0
     );
-    console.log('FFFF', this.dataSource);
   }
 
   public getTotalCost(): number {
     return this.totalTypeCharges;
   }
+
+  toggleRow(element: any) {
+    this.expandedElement = this.expandedElement === element ? null : element;
+  }
+
   public getTotalType(element: ChargesItem[]): number {
-    let totalType = +element
-      .map((e) => {
-        return Number(e.prix);
-      })
-      .reduce((acc, value) => acc + value, 0)
-      .toFixed(0);
-    // Actualiza totalTypeCharges dentro del ciclo de detección de cambios de Angular
-    // this.ngZone.run(() => {
-    //   this.totalTypeCharges += totalType;
-    // });
-    return totalType;
+    return element.reduce((acc, value) => acc + value?.prix, 0);
+  }
+
+  getInnerDataSource(
+    element: ListeChargesItems
+  ): MatTableDataSource<ChargesItem> {
+    return new MatTableDataSource(element.charges);
   }
 }
