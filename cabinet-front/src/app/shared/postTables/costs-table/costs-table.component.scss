@@ -12,7 +12,11 @@ tr.example-element-row:not(.example-expanded-row):hover {
 }
 
 tr.example-element-row:not(.example-expanded-row):active {
-  background: #daf7a6;
+  background: #06efeb;
+}
+
+tr.inner-row:hover {
+  background: #0e79ae;
 }
 
 .example-element-row td {
@@ -49,7 +53,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .inner-table {
   width: 100%;
-  background: #daf7a6;
+  background: #accdea;
 }
 .inner-table table {
   background: aliceblue;
@@ -61,7 +65,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 tr.mat-footer-row {
   font-weight: bold;
-  background-color: #3d5afe;
+  background-color: #add1df;
 }
 td.mat-footer-cell {
   color: aliceblue;

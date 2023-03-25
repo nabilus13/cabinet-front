@@ -107,9 +107,7 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
         this.usersData = [...this.usersData, expense];
       }
     });
-    console.log(this.usersData);
     this.dataSource = new MatTableDataSource(this.usersData);
-    console.log('GGGgg', this.dataSource);
   }
   initilizeData(data: Client[]) {
     const toDate = (str: Date) =>
@@ -129,7 +127,6 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
       prix: client.prix,
       totalCaisse: client.totalCaisse,
     }));
-    console.log(mapClients);
     const mapDette = data
       .filter((client) => {
         return client?.prix - client?.totalCaisse > 0;
@@ -146,7 +143,6 @@ export class ExpensesTableComponent implements OnInit, OnDestroy {
           [index: string]: number;
         }
       );
-    console.log(mapDette);
 
     this.expensescontentTable = Object.entries(mapDette).map(
       ([key, totalDette]) => ({

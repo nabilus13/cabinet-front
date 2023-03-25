@@ -19,7 +19,7 @@
     <td mat-cell *matCellDef="let element" (click)="toggleRow(element)">
       {{ column === "mois" ? element[0] : getTotalType(element[1]) }}
     </td>
-    <ng-container *ngIf="!!column"> fgfdgfd </ng-container>
+
     <td *matFooterCellDef>
       {{ column === "mois" ? "Total" : getTotalCost() }}
     </td>
@@ -37,6 +37,13 @@
     [class.example-expanded-row]="expandedElement === element"
   ></tr>
 
+  <ng-container matColumnDef="detail-inner-row">
+    <td
+      mat-cell
+      *matCellDef="let element"
+      [attr.colspan]="innerSecondDisplayedColumns.length"
+    ></td>
+  </ng-container>
   <!-- Filas secundarias -->
   <ng-container matColumnDef="detail-row">
     <td
@@ -57,9 +64,38 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let subElement of element[1]">
+            <tr
+              *ngFor="let subElement of element[1]; let i = index"
+              (click)="toggleInnerRow(subElement)"
+              class="inner-row"
+            >
               <td>{{ subElement.id }}</td>
               <td>{{ subElement.prix }}</td>
+              <div
+                class="example-element-detail"
+                [@detailExpand]="
+                  expandedInnerElement === subElement ? 'expanded' : 'collapsed'
+                "
+              >
+                <!-- Filas terciarias -->
+                <table class="inner-table">
+                  <thead>
+                    <tr>
+                      <th>Date de paiement</th>
+                      <th>Description</th>
+                      <th>Prix</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let subElement of element[1][i].listMonth">
+                      <td>{{ subElement.datePaiement }}</td>
+                      <td>{{ subElement.description }}</td>
+                      <td>{{ subElement.prix }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- </td> -->
+              </div>
             </tr>
           </tbody>
         </table>

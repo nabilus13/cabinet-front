@@ -196,8 +196,6 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
       data: client,
     };
     this.modalRef = this.modalService.show(this.pop, { initialState });
-
-    console.log(client?.id);
   }
   receiveonCloseStep(idClient: number) {
     this.serviceApi.deleteClient(idClient).subscribe((res) => {
