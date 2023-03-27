@@ -20,7 +20,7 @@
       {{ column === "mois" ? element[0] : getTotalType(element[1]) }}
     </td>
 
-    <td *matFooterCellDef>
+    <td mat-footer-cell *matFooterCellDef>
       {{ column === "mois" ? "Total" : getTotalCost() }}
     </td>
   </ng-container>
@@ -57,20 +57,23 @@
       >
         <table class="inner-table">
           <thead>
-            <tr id="HHHHHHH">
-              <th *ngFor="let column of innerDisplayedColumns">
+            <tr mat-header-cell id="HHHHHHH">
+              <th
+                mat-header-cell
+                *ngFor="let column of innerDisplayedColumns"
+                [style.font-size]="'15px'"
+                style="color: black"
+              >
                 {{ column | uppercase }}
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr
-              *ngFor="let subElement of element[1]; let i = index"
-              (click)="toggleInnerRow(subElement)"
-              class="inner-row"
-            >
-              <td>{{ subElement.id }}</td>
-              <td>{{ subElement.prix }}</td>
+          <tbody *ngFor="let subElement of element[1]; let i = index">
+            <tr (click)="toggleInnerRow(subElement)" class="inner-row">
+              <td mat-cell>{{ subElement.id }}</td>
+              <td mat-cell>{{ subElement.prix }}</td>
+            </tr>
+            <td mat-cell [attr.colspan]="columnsToDisplay.length">
               <div
                 class="example-element-detail"
                 [@detailExpand]="
@@ -79,24 +82,24 @@
               >
                 <!-- Filas terciarias -->
                 <table class="inner-table">
-                  <thead>
+                  <thead mat-header-cell>
                     <tr>
-                      <th>Date de paiement</th>
-                      <th>Description</th>
-                      <th>Prix</th>
+                      <th *ngFor="let column of innerSecondDisplayedColumns">
+                        {{ column | uppercase }}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let subElement of element[1][i].listMonth">
-                      <td>{{ subElement.datePaiement }}</td>
-                      <td>{{ subElement.description }}</td>
-                      <td>{{ subElement.prix }}</td>
+                      <td mat-cell>{{ subElement.datePaiement }}</td>
+                      <td mat-cell>{{ subElement.description }}</td>
+                      <td mat-cell>{{ subElement.prix }}</td>
                     </tr>
                   </tbody>
                 </table>
                 <!-- </td> -->
               </div>
-            </tr>
+            </td>
           </tbody>
         </table>
       </div>

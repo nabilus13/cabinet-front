@@ -35,7 +35,7 @@ export class CostsTableComponent implements OnInit {
 
   columnsToDisplay = ['mois', 'charges'];
   innerDisplayedColumns = ['id', 'prix'];
-  innerSecondDisplayedColumns = ['datePaiement', 'description', 'prix'];
+  innerSecondDisplayedColumns = ['date_Paiement', 'description', 'prix'];
 
   constructor(private ngZone: NgZone) {}
 
