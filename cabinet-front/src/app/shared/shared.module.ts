@@ -18,6 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
@@ -86,6 +87,7 @@ import { StackedChartComponent } from './widgets/stacked-chart/stacked-chart.com
     MatDialogModule,
     ModalModule.forRoot(),
     MatTooltipModule,
+    MatTabsModule,
   ],
   exports: [
     HeaderComponent,
@@ -104,4 +106,4 @@ import { StackedChartComponent } from './widgets/stacked-chart/stacked-chart.com
   entryComponents: [DialogFormComponentComponent, DialogConfirmationComponent],
   providers: [ApiServiceService, DatePipe, BsModalRef],
 })
-export class SharedModule { }
+export class SharedModule {}

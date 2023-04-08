@@ -19,3 +19,9 @@ export interface ChargesItem {
 export interface ListeChargesItems {
   [key: string]: ChargesItem[];
 }
+export interface ChargesExport {
+  date: string;
+  description: string;
+  prix: number;
+  type: string;
+}

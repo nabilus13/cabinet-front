@@ -7,7 +7,11 @@ import {
 } from '@angular/animations';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { ChargesItem, ListeChargesItems } from 'src/app/models/charges';
+import {
+  ChargesExport,
+  ChargesItem,
+  ListeChargesItems,
+} from 'src/app/models/charges';
 
 @Component({
   selector: 'app-costs-table',
@@ -32,6 +36,7 @@ export class CostsTableComponent implements OnInit {
   totalTypeCharges = 0;
 
   loaderEnabled: boolean;
+  rows: ChargesExport[] = [];
 
   columnsToDisplay = ['mois', 'charges'];
   innerDisplayedColumns = ['id', 'prix'];
@@ -70,5 +75,14 @@ export class CostsTableComponent implements OnInit {
     element: ListeChargesItems
   ): MatTableDataSource<ChargesItem> {
     return new MatTableDataSource(element.charges);
+  }
+  addRow() {
+    const newRow: ChargesExport = {
+      date: '',
+      description: '',
+      prix: 0,
+      type: '',
+    };
+    this.rows.push(newRow);
   }
 }

@@ -8,16 +8,12 @@ Data(Highcharts);
 ExportData(Highcharts);
 HC_exporting(Highcharts);
 
-
 @Component({
   selector: 'app-stacked-chart',
   templateUrl: './stacked-chart.component.html',
-  styleUrls: ['./stacked-chart.component.scss']
+  styleUrls: ['./stacked-chart.component.scss'],
 })
-
 export class StackedChartComponent implements OnInit {
-
-
   highcharts = Highcharts;
   chartOptions: Highcharts.Options = {};
   result: any;
@@ -26,9 +22,7 @@ export class StackedChartComponent implements OnInit {
 
   chargesByMonth: Map<string, number[]> = new Map<string, []>();
 
-
-
-  constructor() { }
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.data) {
@@ -45,7 +39,6 @@ export class StackedChartComponent implements OnInit {
 
   setData() {
     if (this.data != null) {
-
       const ids = new Set<string>();
 
       for (const monthExpenses of Object.values(this.data)) {
@@ -56,24 +49,24 @@ export class StackedChartComponent implements OnInit {
       let arrayCharges = [...ids];
       const new_data: { [id: string]: number[] } = {};
 
-
       arrayCharges.forEach((type: string) => {
         let array: number[] = [];
         for (const [month, values] of Object.entries(this.data)) {
           if (values.some((v) => v.id === type)) {
-            let val = values.find((v) => { return v.id == type })?.prix;
-            array.push(val ?? 0)
+            let val = values.find((v) => {
+              return v.id == type;
+            })?.prix;
+            if (!!val) {
+              let numFixed = parseFloat(val.toFixed(2));
+              array.push(numFixed);
+            }
           } else {
-            array.push(0)
+            array.push(0);
           }
-
         }
         this.chargesByMonth.set(type, array);
-
       });
     }
-
-
   }
   setHighChartColumn() {
     this.chartOptions = {
@@ -96,7 +89,7 @@ export class StackedChartComponent implements OnInit {
         min: 0,
         title: {
           text: 'Valeur en Dirham',
-          align: 'high'
+          align: 'high',
         },
         labels: {
           overflow: 'justify',
@@ -108,15 +101,15 @@ export class StackedChartComponent implements OnInit {
       plotOptions: {
         bar: {
           dataLabels: {
-            enabled: true
-          }
+            enabled: true,
+          },
         },
         series: {
-          stacking: 'normal'
-        }
+          stacking: 'normal',
+        },
       },
       credits: {
-        enabled: false
+        enabled: false,
       },
       series: [
         {
@@ -164,9 +157,7 @@ export class StackedChartComponent implements OnInit {
           type: 'bar',
           data: this.chargesByMonth.get('EQUIPEMENTS'),
         },
-      ]
-
-    }
+      ],
+    };
   }
-
 }

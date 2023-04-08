@@ -70,3 +70,13 @@ tr.mat-footer-row {
 td.mat-footer-cell {
   color: aliceblue;
 }
+.example-button-row {
+  display: table-cell;
+  max-width: 400px;
+  text-align: center !important;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.mat-raised-button {
+  background-color: #f0b609;
+}
