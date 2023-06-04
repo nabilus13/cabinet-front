@@ -33,6 +33,7 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
   data: Client[] = [];
   finantialContentTable: ContentFinantialTable[];
   tableFooterColumns: string[] = ['total'];
+  profitReelDeficit: number = 0;
 
   constructor(
     private apiServiceService: ApiServiceService,
@@ -117,7 +118,8 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
           key,
           mapTotalCaisse[key],
           this.charges[index]?.totalExpenses,
-          mapComission[key]
+          mapComission[key],
+          true
         ),
 
         profitTheorique: this.getMoisDebutReserveProfitReel(
@@ -157,7 +159,8 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
     dateFinReserve: string,
     caisse: number,
     charges: number,
-    com: number
+    com: number,
+    isProfitReel?: boolean
   ): number {
     let dateDebutString = `01-${this.dateDebutReserve}`;
     const dateDebut = new Date(
@@ -167,11 +170,16 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
     const dateFin = new Date(
       dateFinString.replace(/(\d{2})-(\d{2})-(\d{4})/, '$2/$1/$3')
     );
+    let total = caisse - charges - com;
 
-    if (dateFin < dateDebut) {
-      return +(caisse - charges - com).toFixed(0);
+    if (!!isProfitReel && total < 0) {
+      this.profitReelDeficit += total;
+      return +total.toFixed(0);
     } else {
-      return +((caisse - charges - com) * 0.9).toFixed(0);
+      if (dateFin < dateDebut || total < 0) {
+        return +total.toFixed(0);
+      }
+      return +(total * 0.9).toFixed(0);
     }
   }
 
@@ -193,7 +201,8 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
     if (dateFin < dateDebut) {
       return 0;
     } else {
-      return +((caisse - charges - com) * 0.1).toFixed(0);
+      let result = caisse - charges - com;
+      return result > 0 ? +((caisse - charges - com) * 0.1).toFixed(0) : 0;
     }
   }
 
@@ -231,9 +240,16 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
       case 'reserveCaisse10prct':
         return this.finantialContentTable
           .map((t) => {
-            return Number(t?.reserveCaisse10prct);
+            if (t?.reserveCaisse10prct != undefined) {
+              return Number(t?.reserveCaisse10prct);
+            } else {
+              return Number(t?.reserveCaisse10prct);
+            }
           })
-          .reduce((acc, value) => acc + value, 0);
+          .reduce(
+            (acc, value) => acc + value,
+            +this.profitReelDeficit.toFixed(0)
+          );
       case 'profitReel':
         return this.finantialContentTable
           .map((t) => {
