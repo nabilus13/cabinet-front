@@ -28,6 +28,7 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
     'charges',
     'reserveCaisse10prct',
     'profitReel',
+    'profitReelPersonne',
     'profitTheorique',
   ];
   data: Client[] = [];
@@ -121,6 +122,15 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
           mapComission[key],
           true
         ),
+        profitReelPersonne: +(
+          this.getMoisDebutReserveProfitReel(
+            key,
+            mapTotalCaisse[key],
+            this.charges[index]?.totalExpenses,
+            mapComission[key],
+            false
+          ) / 3
+        ).toFixed(0),
 
         profitTheorique: this.getMoisDebutReserveProfitReel(
           key,
@@ -254,6 +264,12 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
         return this.finantialContentTable
           .map((t) => {
             return Number(t?.profitReel);
+          })
+          .reduce((acc, value) => acc + value, 0);
+      case 'profitReelPersonne':
+        return this.finantialContentTable
+          .map((t) => {
+            return Number(t?.profitReelPersonne);
           })
           .reduce((acc, value) => acc + value, 0);
       case 'profitTheorique':

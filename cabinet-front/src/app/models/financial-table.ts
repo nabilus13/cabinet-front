@@ -6,6 +6,7 @@ export interface ContentFinantialTable {
   charges?: number;
   reserveCaisse10prct?: number;
   profitReel?: number;
+  profitReelPersonne?: number;
   profitTheorique?: number;
 }
 
