@@ -1,0 +1,56 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="toggleSideBar()">
+      <mat-icon
+        class="example-icon"
+        aria-hidden="false"
+        aria-label="Example favorite icon"
+        >menu</mat-icon
+      >
+    </button>
+    <span> APP LOGO</span>
+    <div
+      fxFlex="80"
+      fxLayoutGap="20px"
+      fxLayoutAlign="end center"
+      class="select"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>Custom calendar header</mat-label>
+        <mat-label>Inherited calendar color</mat-label>
+        <input matInput [matDatepicker]="picker1" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker1"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div fxFlex="20" fxLayoutAlign="end end" [style.margin-top]="'12px'">
+      <ul fxLayout="row" fxLayoutGap="20px">
+        <li>
+          <button mat-icon-button>
+            <mat-icon>settings</mat-icon>
+          </button>
+        </li>
+        <!-- <li> -->
+
+        <!-- <br /><br /> -->
+        <!-- </li> -->
+        <li>
+          <button mat-button [matMenuTriggerFor]="menu">
+            <mat-icon>person_outline</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>Item 1</button>
+            <button mat-menu-item (click)="logOut()">
+              <mat-icon>exit_to_app</mat-icon>
+              Sign Out
+            </button>
+          </mat-menu>
+        </li>
+      </ul>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

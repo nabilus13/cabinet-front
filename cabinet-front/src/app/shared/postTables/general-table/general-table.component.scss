@@ -1,0 +1,31 @@
+table {
+  width: 100%;
+}
+
+.mat-row:nth-child(even) {
+  background-color: #e4f0ec;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: #ffffff;
+}
+td.mat-cell {
+  text-align: center !important;
+}
+
+::ng-deep .mat-sort-header-container {
+  display: flex;
+  justify-content: center;
+}
+
+.example-button-row {
+  display: table-cell;
+  max-width: 400px;
+  text-align: center !important;
+}
+.mat-raised-button {
+  background-color: #f0b609;
+}
+.cursor {
+  cursor: default !important;
+}

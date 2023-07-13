@@ -1,0 +1,102 @@
+<mat-nav-list>
+  <div class="profile-card">
+    <div class="header">
+      <h2>Profile 1</h2>
+      <h4>Role</h4>
+    </div>
+    <img src="../../../assets/mini-logo.png" />
+  </div>
+  <h2 matSubheader>Pages</h2>
+
+  <a mat-list-item routerLinkActive="list-item-active" routerLink="dashboard"
+    >Dashboard</a
+  >
+  <a mat-list-item routerLinkActive="list-item-active" routerLink="posts"
+    >Posts</a
+  >
+
+  <mat-divider></mat-divider>
+
+  <h2 matSubheader>Tools</h2>
+
+  <a mat-list-item routerLinkActive="list-item-active" routerLink="/">
+    <mat-icon>import_contacts</mat-icon>
+    Contacts
+  </a>
+</mat-nav-list>
+<mat-nav-list>
+  <mat-list-item (click)="showSubmenu = !showSubmenu" class="parent">
+    <span class="full-width" *ngIf="isExpanded || isShowing">Tablas</span>
+    <mat-icon mat-list-icon>home</mat-icon>
+    <mat-icon
+      class="menu-button"
+      [ngClass]="{ rotated: showSubmenu }"
+      *ngIf="isExpanded || isShowing"
+      >expand_more</mat-icon
+    >
+  </mat-list-item>
+  <div
+    class="submenu"
+    [ngClass]="{ expanded: showSubmenu }"
+    *ngIf="isShowing || isExpanded"
+  >
+    <a
+      mat-list-item
+      routerLinkActive="list-item-active"
+      routerLink="posts/shared/general"
+      >Tabla General</a
+    >
+    <a
+      mat-list-item
+      routerLinkActive="list-item-active"
+      routerLink="posts/shared/debts"
+      >Tabla Deudas</a
+    >
+    <a
+      mat-list-item
+      routerLinkActive="list-item-active"
+      routerLink="posts/shared/costs"
+      >Tabla Gastos</a
+    >
+    <a
+      mat-list-item
+      routerLinkActive="list-item-active"
+      routerLink="posts/shared/finantial"
+      >Tabla Resumen Financiero</a
+    >
+    <!-- <mat-list-item (click)="showSubSubMenu = !showSubSubMenu" class="parent">
+      <span class="full-width" *ngIf="isExpanded || isShowing"
+        >Nested Menu</span
+      >
+      <mat-icon
+        class="menu-button"
+        [ngClass]="{ rotated: showSubSubMenu }"
+        *ngIf="isExpanded || isShowing"
+        >expand_more</mat-icon
+      >
+    </mat-list-item> -->
+    <!-- <div
+      class="submenu"
+      [ngClass]="{ expanded: showSubSubMenu }"
+      *ngIf="isShowing || isExpanded"
+    >
+      <mat-list-item>SubSubmenu Item 1</mat-list-item>
+      <mat-list-item>SubSubmenu Item 2</mat-list-item>
+    </div> -->
+  </div>
+</mat-nav-list>
+
+<!-- <div>Profie</div>
+<mat-divider></mat-divider>
+<div>
+  Menu<br />
+  <div>Chart1</div>
+  <div>Chart2</div>
+  <div>Chart3</div>
+  <div>Chart3</div>
+</div>
+
+<mat-divider></mat-divider>
+<div>
+  <div>Other Menu</div>
+</div> -->

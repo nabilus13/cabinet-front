@@ -1,0 +1,77 @@
+<!-- <div style="border: 1px solid red; padding: 5px" fxLayout="row"> -->
+<div *ngIf="!loaderEnabled">
+  <div class="flex-container">
+    <mat-grid-list [cols]="cols" rowHeight="150px">
+      <mat-grid-tile *ngFor="let tiel of tiels" [colspan]="1" [rowspan]="1">
+        <app-card-banner
+          [imgSource]="tiel.imgSource"
+          [title]="tiel.title"
+          [subTitle]="tiel.subtitle"
+          [amount]="tiel.amount"
+        ></app-card-banner>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <!-- <mat-card fxFlex>Chart1</mat-card>
+  <mat-card fxFlex>Chart3</mat-card>
+  <mat-card fxFlex>Chart2</mat-card> -->
+    <!-- <mat-card fxFlex>Chart3</mat-card> -->
+  </div>
+
+  <mat-divider class="p-2"></mat-divider>
+
+  <div>
+    <app-line-chart
+      [data]="data"
+      [categoriesMonth]="categoriesMonth"
+      [months]="months"
+      [charges]="charges"
+      [caisseTotaTeorique]="caisseTotaTeorique"
+      [caisseTotalReel]="caisseTotalReel"
+      [comissionTotale]="comissionTotale"
+      [profitTotalReel]="profitTotalReel"
+      [profitTotalTheorique]="profitTotalTheorique"
+    ></app-line-chart>
+  </div>
+  <!-- </div> -->
+
+  <mat-divider></mat-divider>
+  <br />
+
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <div fxFlex="70">
+      <app-column-chart
+        [data]="data"
+        [categoriesMonth]="categoriesMonth"
+        [caisseTotaTeorique]="caisseTotaTeorique"
+        [caisseTotalReel]="caisseTotalReel"
+        [comissionTotale]="comissionTotale"
+        [totalDette]="totalDette"
+        [chargesFixes]="chargesFixes"
+        [profitTotalReel]="profitTotalReel"
+        [profitTotalTheorique]="profitTotalTheorique"
+      ></app-column-chart>
+    </div>
+    <div fxFlex="30">
+      <app-pie-chart></app-pie-chart>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <br />
+  <ng-container *ngIf="data && categoriesMonth">
+    <div fxLayout="row">
+      <div fxFlex="100">
+        <app-stacked-chart
+          [categoriesMonth]="categoriesMonth"
+          [data]="chargesMonth"
+        >
+        </app-stacked-chart>
+      </div>
+    </div>
+  </ng-container>
+  <mat-divider></mat-divider>
+  <br />
+</div>
+<div class="loader-wrapper" *ngIf="loaderEnabled">
+  <div class="backdrop"></div>
+  <div class="spinner"></div>
+</div>
