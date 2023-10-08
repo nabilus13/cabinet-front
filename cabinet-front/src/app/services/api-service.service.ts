@@ -39,7 +39,9 @@ export class ApiServiceService {
     );
   }
   apiSaveClient(client: Client): Observable<any> {
-    return this.http.post<any>(`${environment.API_BACKEND}clients`, client);
+    return this.http.post<any>(`${environment.API_BACKEND}clients`, client, {
+      observe:'response'
+    });
   }
 
   deleteClient(id: number): Observable<any> {
