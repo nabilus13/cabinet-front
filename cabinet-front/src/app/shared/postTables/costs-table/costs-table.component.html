@@ -124,38 +124,102 @@
   </mat-tab>
   <mat-tab label="Tab 2">
     <div fxLayout="row" fxLayoutAlign="end center">
-      <div class="example-button-row">
-        <button mat-raised-button fxLayoutGap="10px" (click)="addRow()">
+      <div class="example-button-row" fxLayoutGap="20px">
+        <button mat-raised-button (click)="addRow()">
           <mat-icon>add</mat-icon><span>Ajouter Charge</span>
+        </button>
+        <input
+          #fileInput
+          type="file"
+          (change)="onFileSelected($event)"
+          accept=".csv"
+          style="display: none"
+        />
+        <button
+          mat-raised-button
+          fxLayoutGap="10px"
+          (click)="fileInput.click()"
+        >
+          <mat-icon>folder</mat-icon><span>Import Csv</span>
+        </button>
+        <button mat-raised-button (click)="addType()">
+          <mat-icon>star</mat-icon><span>Ajouter type</span>
+        </button>
+
+        <button
+          [disabled]="!csvData"
+          mat-raised-button
+          (click)="saveDataToBackend()"
+          matTooltip="Save charges"
+        >
+          <mat-icon>save</mat-icon><span>Save Charges</span>
         </button>
       </div>
     </div>
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Prix</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of rows">
-            <td><input type="date" [(ngModel)]="row.date" /></td>
-            <td><input type="text" [(ngModel)]="row.description" /></td>
-            <td><input type="number" [(ngModel)]="row.prix" /></td>
-            <td>
-              <mat-select [(ngModel)]="row.type">
-                <mat-option value="1">1</mat-option>
-                <mat-option value="2">2</mat-option>
-              </mat-select>
-            </td>
-          </tr>
-        </tbody>
-      </table>
 
-      <!-- <button (click)="addRow()">Add Row</button> -->
+    <div *ngIf="csvData">
+      <table mat-table [dataSource]="csvData" matSort class="mat-elevation-z8">
+        <ng-container
+          *ngFor="let fieldHeader of displayedImportColumns; let i = index"
+          matColumnDef="{{ fieldHeader }}"
+        >
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ fieldHeader | uppercase }}
+          </th>
+          <ng-container *matCellDef="let element">
+            <ng-container *ngIf="fieldHeader != 'ActionClient'">
+              <td
+                class="cursor"
+                mat-cell
+                [ngClass]="{
+                  failed: element?.type == 0
+                }"
+              >
+                <div
+                  fxLayout="row"
+                  *ngIf="element !== elementBeingEdited; else editField"
+                >
+                  <div fxFlex="90">{{ element[fieldHeader] }}</div>
+                </div>
+                <ng-template #editField>
+                  <ng-container *ngIf="fieldHeader !== 'type'">
+                    {{ element[fieldHeader] }}
+                  </ng-container>
+                  <!-- Campo de entrada para editar el type -->
+                  <input
+                    *ngIf="fieldHeader === 'type'"
+                    [(ngModel)]="elementBeingEdited.type"
+                    (blur)="saveEditedRecord()"
+                    (keyup.enter)="saveEditedRecord()"
+                  />
+                </ng-template>
+              </td>
+            </ng-container>
+            <ng-container *ngIf="fieldHeader == 'ActionClient'">
+              <td
+                mat-cell
+                [ngClass]="{
+                  failed: element?.type == 0
+                }"
+              >
+                <div fxLayout="row" fxLayoutAlign="start center">
+                  <button
+                    mat-icon-button
+                    (click)="editRecord(element, i)"
+                    matTooltip="Modifier type"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+
+        <!-- Definición de las filas y columnas -->
+        <tr mat-header-row *matHeaderRowDef="displayedImportColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedImportColumns"></tr>
+      </table>
     </div>
   </mat-tab>
 </mat-tab-group>

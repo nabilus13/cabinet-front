@@ -72,11 +72,14 @@ td.mat-footer-cell {
 }
 .example-button-row {
   display: table-cell;
-  max-width: 400px;
+  // max-width: 400px;
   text-align: center !important;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
 }
 .mat-raised-button {
+  background-color: #f0b609;
+}
+.failed {
   background-color: #f0b609;
 }

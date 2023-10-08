@@ -35,6 +35,7 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
   finantialContentTable: ContentFinantialTable[];
   tableFooterColumns: string[] = ['total'];
   profitReelDeficit: number = 0;
+  totalSavings = 0;
 
   constructor(
     private apiServiceService: ApiServiceService,
@@ -58,11 +59,92 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
           this.data = res;
           this.initilizeData(this.data);
           this.loaderEnabled = false;
+          this.adjustNegativeProfitsWithSavingsAndPrecedentProfits();
+          console.log(this.totalSavings);
         }
       }
     );
   }
 
+  adjustNegativeProfitsWithSavingsAndPrecedentProfits() {
+    // this.totalSavings = this.finantialContentTable
+    //   .map((m) => {
+    //     return +(m.reserveCaisse10prct ?? 0).toFixed(0);
+    //   })
+    //   .reduce((acc, value) => acc + value, 0);
+    
+    this.finantialContentTable.forEach((item, index) => {
+      this.totalSavings += +(item.reserveCaisse10prct ?? 0).toFixed(0);
+      if (!!item?.profitReel && item?.profitReel < 0) {
+        if (this.totalSavings + item?.profitReel > 0) {
+          this.totalSavings += item?.profitReel;
+    console.log(this.totalSavings);
+
+          this.finantialContentTable[index] = {
+            ...this.finantialContentTable[index],
+            profitReel: 0,
+            profitReelPersonne: 0,
+            profitTheorique: 0,
+          };
+        } else {
+    console.log(this.totalSavings);
+
+          const profitReel =
+            (this.finantialContentTable[index]?.profitReel ?? 0) +
+            this.totalSavings;
+
+          const profitTheorique =
+            (this.finantialContentTable[index]?.profitTheorique ?? 0) +
+            this.totalSavings;
+
+          console.log(profitReel);
+          console.log(this.finantialContentTable[index - 1]?.profitReel);
+
+          this.finantialContentTable[index] = {
+            ...this.finantialContentTable[index],
+            profitReel: this.returnValueProfits(
+              this.totalSavings,
+              this.finantialContentTable[index]?.profitReel ?? 0,
+              this.finantialContentTable[index - 1]?.profitReel ?? 0
+            ),
+            profitReelPersonne: this.returnValueProfits(
+              +(this.totalSavings / 3).toFixed(0),
+              this.finantialContentTable[index]?.profitReelPersonne ?? 0,
+              this.finantialContentTable[index - 1]?.profitReelPersonne ?? 0
+            ),
+            profitTheorique: this.returnValueProfits(
+              this.totalSavings,
+              this.finantialContentTable[index]?.profitTheorique ?? 0,
+              this.finantialContentTable[index - 1]?.profitTheorique ?? 0
+            ),
+          };
+          this.finantialContentTable[index - 1] = {
+            ...this.finantialContentTable[index - 1],
+            profitReel:
+              (profitReel ?? 0) +
+              (this.finantialContentTable[index - 1]?.profitReel ?? 0),
+            profitReelPersonne:
+              +(profitReel / 3).toFixed(0) +
+              (this.finantialContentTable[index - 1]?.profitReelPersonne ?? 0),
+            profitTheorique:
+              (profitTheorique ?? 0) +
+              (this.finantialContentTable[index - 1]?.profitTheorique ?? 0),
+          };
+          this.totalSavings = 0;
+        }
+      }
+    });
+    console.log(this.finantialContentTable);
+  }
+
+  returnValueProfits(
+    savings: number,
+    item: number,
+    precedentItem: number
+  ): number {
+    const result = savings + item + precedentItem;
+    return result > 0 ? 0 : result;
+  }
   initilizeData(data: Client[]) {
     const toDate = (str: Date) =>
       new Date(str.toString().replace(/^(\d+)\/(\d+)\/(\d+)$/, '$2/$1/$3'));
@@ -222,6 +304,7 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
     return `${mes}-${anio}`;
   }
   public getTotalCost(element: string): number {
+    console.log(this.profitReelDeficit.toFixed(0));
     switch (element) {
       case 'prix':
         return this.finantialContentTable
@@ -248,18 +331,16 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
           })
           .reduce((acc, value) => acc + value, 0);
       case 'reserveCaisse10prct':
-        return this.finantialContentTable
-          .map((t) => {
-            if (t?.reserveCaisse10prct != undefined) {
-              return Number(t?.reserveCaisse10prct);
-            } else {
-              return Number(t?.reserveCaisse10prct);
-            }
-          })
-          .reduce(
-            (acc, value) => acc + value,
-            +this.profitReelDeficit.toFixed(0)
-          );
+        return this.totalSavings;
+      // this.finantialContentTable
+      //   .map((t) => {
+      //     if (t?.reserveCaisse10prct != undefined) {
+      //       return Number(t?.reserveCaisse10prct);
+      //     } else {
+      //       return Number(t?.reserveCaisse10prct);
+      //     }
+      //   })
+      // .reduce((acc, value) => acc + value, 0)
       case 'profitReel':
         return this.finantialContentTable
           .map((t) => {

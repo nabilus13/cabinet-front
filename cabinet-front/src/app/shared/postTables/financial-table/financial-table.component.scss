@@ -57,3 +57,17 @@ td.mat-footer-cell {
   border-top: 4px solid #fff;
   animation: rotating 1.2s infinite cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
+
+.table-container {
+  max-height: 75vh; /* Establece una altura máxima para el área de datos */
+  overflow-y: auto; /* Habilita el scroll vertical si es necesario */
+  overflow-x: auto; /* Habilita el scroll horizontal si es necesario */
+}
+
+/* Asegura que los encabezados permanezcan fijos en la parte superior */
+.mat-header-row {
+  position: sticky;
+  top: 0;
+  background-color: white; /* Puedes personalizar el color de fondo según tu diseño */
+  z-index: 1; /* Asegura que los encabezados estén por encima del área de datos */
+}

@@ -39,10 +39,7 @@ export class ApiServiceService {
     );
   }
   apiSaveClient(client: Client): Observable<any> {
-    return this.http.post<any>(`${environment.API_BACKEND}clients`, client, {
-      // el observe response es el q hace q mi respuesta sea un objeto con body status y hhttpheaders
-      observe: 'response',
-    });
+    return this.http.post<any>(`${environment.API_BACKEND}clients`, client);
   }
 
   deleteClient(id: number): Observable<any> {
