@@ -14,6 +14,22 @@ export interface Client {
   totalCaisse: number;
   commentaire?: string;
 }
+export interface ClientDto {
+  id: string;
+  date_reception: string;
+  nombre_plans: string;
+  dossier?: string;
+  client: string;
+  representant?: string;
+  situation?: string;
+  lieux: string;
+  date_livraison?: string;
+  telephone?: string;
+  prix: string;
+  comission?: string;
+  total_caisse?: string;
+  commentaire?: string;
+}
 export enum TypeRequest {
   Save = 'Save',
   Update = 'Update',
@@ -26,3 +42,4 @@ export interface ResultDialog {
   type?: TypeRequest;
   isClosing?: boolean;
 }
+

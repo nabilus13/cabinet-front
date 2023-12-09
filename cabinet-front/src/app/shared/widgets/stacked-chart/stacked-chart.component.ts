@@ -25,6 +25,8 @@ export class StackedChartComponent implements OnInit {
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.categoriesMonth)
+    console.log('Bruto',this.data)
     if (changes.data) {
       this.setData();
       this.setHighChartColumn();
@@ -56,7 +58,8 @@ export class StackedChartComponent implements OnInit {
             let val = values.find((v) => {
               return v.id == type;
             })?.prix;
-            if (!!val) {
+            console.log(typeof val)
+            if (!!val && val >= 0) {
               let numFixed = parseFloat(val.toFixed(2));
               array.push(numFixed);
             }
@@ -67,6 +70,8 @@ export class StackedChartComponent implements OnInit {
         this.chargesByMonth.set(type, array);
       });
     }
+    console.log('this.chargesByMonth',this.chargesByMonth)
+
   }
   setHighChartColumn() {
     this.chartOptions = {

@@ -67,18 +67,12 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
   }
 
   adjustNegativeProfitsWithSavingsAndPrecedentProfits() {
-    // this.totalSavings = this.finantialContentTable
-    //   .map((m) => {
-    //     return +(m.reserveCaisse10prct ?? 0).toFixed(0);
-    //   })
-    //   .reduce((acc, value) => acc + value, 0);
-    
     this.finantialContentTable.forEach((item, index) => {
       this.totalSavings += +(item.reserveCaisse10prct ?? 0).toFixed(0);
       if (!!item?.profitReel && item?.profitReel < 0) {
         if (this.totalSavings + item?.profitReel > 0) {
           this.totalSavings += item?.profitReel;
-    console.log(this.totalSavings);
+          console.log(this.totalSavings);
 
           this.finantialContentTable[index] = {
             ...this.finantialContentTable[index],
@@ -87,7 +81,7 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
             profitTheorique: 0,
           };
         } else {
-    console.log(this.totalSavings);
+          console.log(this.totalSavings);
 
           const profitReel =
             (this.finantialContentTable[index]?.profitReel ?? 0) +
@@ -133,6 +127,7 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
           this.totalSavings = 0;
         }
       }
+      console.log(this.finantialContentTable[index]);
     });
     console.log(this.finantialContentTable);
   }

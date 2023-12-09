@@ -13,7 +13,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
-import { Client, ResultDialog, TypeRequest } from 'src/app/models/client';
+import {
+  Client,
+  ClientDto,
+  ResultDialog,
+  TypeRequest,
+} from 'src/app/models/client';
 import { ApiServiceService } from 'src/app/services/api-service.service';
 import { DialogFormComponentComponent } from '../../dialog-form-component/dialog-form-component.component';
 
@@ -30,11 +35,19 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   modalRef: BsModalRef;
 
   dataSource: MatTableDataSource<any>;
+  clientCsvData: MatTableDataSource<any>;
   subscription: Subscription;
   showModal = false;
   newClient: Client;
 
+  // Representa el objeto cliente que se está editando
+  elementBeingEdited: any = null;
+
+  // Representa el nombre del campo del objeto cliente que se está editando
+  editingField: string | null = null;
+
   title = 'CLient';
+  dataClientsImport: ClientDto[] = [];
   constructor(
     private serviceApi: ApiServiceService,
     private dialog: MatDialog,
@@ -50,11 +63,9 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.getData();
     //to avoid de ng1000 error detection change
     this.cd.detectChanges();
-    // setTimeout(() => {
-    // }, 500);
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
   }
+  displayedColumnsCsv: string[] = [];
+
   displayedColumns: string[] = [
     'id',
     'dateReception',
@@ -211,5 +222,128 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
     // if (this.accepterCgu) {
     this.modalRef = this.modalService.show(this.pop);
     // }
+  }
+  /////////////////////////////////////Tab_2////////////////////////////////////////
+  addClientRow() {
+    // Implementar la lógica para añadir una nueva fila
+  }
+
+  onClientFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.parseClientCsv(file);
+    }
+  }
+
+  parseClientCsv(file: File): void {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const content = e.target?.result as string;
+      const lines = content.split('\n');
+      const headers = lines[0].split(',').map((header) => header.trim()); // Limpiar nombres de columna
+
+      this.displayedColumnsCsv = headers;
+      const data = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map((value) => value.trim()); // Limpiar valores
+
+        if (values.length === headers.length) {
+          // Asegurarse de que coincidan las columnas y los valores
+          const row: ClientDto = {
+            id: i.toString(),
+            date_reception: this.getFormatDate(),
+            nombre_plans: '',
+            dossier: '',
+            client: '',
+            representant: '',
+            situation: '',
+            lieux: '',
+            date_livraison: this.getFormatDate(),
+            telephone: '',
+            prix: '',
+            comission: '',
+            total_caisse: '',
+            commentaire: '',
+          };
+
+          for (let j = 0; j < headers.length; j++) {
+            row[headers[j] as keyof ClientDto] = values[j] as any;
+          }
+
+          data.push(row);
+          this.dataClientsImport.push(row);
+        }
+      }
+
+      this.clientCsvData = new MatTableDataSource(data);
+      this.clientCsvData.sort = this.sort;
+      console.log(data, this.clientCsvData);
+    };
+
+    reader.readAsText(file);
+  }
+
+  getFormatDate(): string {
+    // Crear un objeto Date (la fecha actual, por ejemplo)
+    const miFecha = new Date();
+
+    // Obtener el año, mes y día
+    let year = miFecha.getFullYear();
+    let month = miFecha.getMonth() + 1; // getMonth() devuelve un valor de 0 a 11
+    let day = miFecha.getDate();
+
+    // Asegurarse de que el mes y el día tengan dos dígitos
+    const monthString = month < 10 ? '0' + month.toString() : month.toString();
+    const dayString = day < 10 ? '0' + day.toString() : day.toString();
+
+    // Formatear la fecha en formato YYYY-MM-DD
+    return year.toString() + '-' + monthString + '-' + dayString;
+  }
+  saveClientDataToBackend() {
+    const clients: Client[] = [];
+
+    for (const element of this.clientCsvData.data) {
+      const elemento = element;
+
+      const client: Client = {
+        id: parseInt(elemento.id),
+        dateReception: elemento.date_reception,
+        nombrePlans: parseInt(elemento.nombre_plans),
+        dossier: elemento.dossier,
+        client: elemento.client,
+        representant: elemento.representant,
+        lieux: elemento.lieux,
+        dateLivraison: elemento.date_livraison,
+        situation: elemento.situation,
+        telephone: parseInt(elemento.telephone),
+        prix: parseFloat(elemento.prix),
+        comission: parseFloat(elemento.comission),
+        totalCaisse: parseFloat(elemento.total_caisse),
+      };
+      clients.push(client);
+    }
+    console.log(clients);
+    // this.serviceApi.apiSaveAllClient(clients).subscribe((res) => {
+    //   console.log(res);
+    // });
+  }
+
+  saveEditedClientRecord() {
+    if (this.elementBeingEdited) {
+      // Aquí iría la lógica para validar y procesar los cambios
+      // Por ejemplo, enviar el elemento editado al backend para su actualización
+      // this.apiService.updateClient(this.elementBeingEdited).subscribe({
+      //   next: (res) => {
+      //     console.log('Datos del cliente actualizados con éxito', res);
+      //     // Restablecer elementBeingEdited a null después de guardar
+      //     this.elementBeingEdited = null;
+      //   },
+      //   error: (err) => {
+      //     console.error('Error al actualizar los datos del cliente', err);
+      //   }
+      // });
+    }
   }
 }

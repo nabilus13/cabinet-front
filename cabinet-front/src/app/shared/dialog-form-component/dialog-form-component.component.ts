@@ -110,50 +110,73 @@ export class DialogFormComponentComponent implements OnInit {
   public getPrix(): number {
     return this.form.get('prix')?.value ? this.form.get('prix')?.value : 0;
   }
-  setValues(cl: Client) {
+  setValues(cl: Client): void {
     cl.dateReception
       ? this.form.get('dateReception')?.setValue(cl.dateReception)
-      : '';
+      : this.form.get('dateReception')?.setValue('');
     cl.nombrePlans
       ? this.form.get('nombrePlans')?.setValue(cl.nombrePlans)
-      : '';
-    cl.dossier ? this.form.get('dossier')?.setValue(cl.dossier) : '';
+      : this.form.get('nombrePlans')?.setValue('');
+
+    cl.dossier
+      ? this.form.get('dossier')?.setValue(cl.dossier)
+      : this.form.get('dossier')?.setValue('');
     if (this.data && this.data?.type == 'Update') {
-      cl.client ? this.form.get('client')?.setValue(cl.client) : '';
+      cl.client
+        ? this.form.get('client')?.setValue(cl.client)
+        : this.form.get('client')?.setValue('');
     } else {
       cl.client
         ? this.form
             .get('client')
             ?.setValue('REG./' + cl.dateReception + '/' + cl.client)
-        : '';
+        : this.form.get('client')?.setValue('');
     }
     cl.representant
       ? this.form.get('representant')?.setValue(cl.representant)
-      : '';
-    cl.lieux ? this.form.get('lieux')?.setValue(cl.lieux) : '';
+      : this.form.get('representant')?.setValue('');
+
+    cl.lieux
+      ? this.form.get('lieux')?.setValue(cl.lieux)
+      : this.form.get('lieux')?.setValue('');
+
     cl.dateLivraison
       ? this.form.get('dateLivraison')?.setValue(cl.dateLivraison)
-      : '';
-    cl.situation ? this.form.get('situation')?.setValue(cl.situation) : '';
-    cl.telephone ? this.form.get('telephone')?.setValue(cl.telephone) : '';
+      : this.form.get('dateLivraison')?.setValue('');
+
+    cl.situation
+      ? this.form.get('situation')?.setValue(cl.situation)
+      : this.form.get('situation')?.setValue('');
+
+    cl.telephone
+      ? this.form.get('telephone')?.setValue(cl.telephone)
+      : this.form.get('telephone')?.setValue('');
+
     if (this.data && this.data?.type == 'Update') {
-      cl.prix ? this.form.get('prix')?.setValue(cl.prix) : '';
+      cl.prix
+        ? this.form.get('prix')?.setValue(cl.prix)
+        : this.form.get('prix')?.setValue('');
     } else {
-      cl.prix ? this.form.get('prix')?.setValue(cl.prix - cl.totalCaisse) : '';
+      cl.prix
+        ? this.form.get('prix')?.setValue(cl.prix - cl.totalCaisse)
+        : this.form.get('prix')?.setValue('');
     }
 
-    cl.comission ? this.form.get('comission')?.setValue(cl.comission) : '';
+    cl.comission
+      ? this.form.get('comission')?.setValue(cl.comission)
+      : this.form.get('comission')?.setValue('');
+
     if (this.data && this.data?.type == 'Update') {
       cl.totalCaisse
         ? this.form.get('totalCaisse')?.setValue(cl.totalCaisse)
-        : '';
+        : this.form.get('totalCaisse')?.setValue('');
     } else {
       this.form.get('totalCaisse')?.setValue('');
     }
 
     cl.commentaire
       ? this.form.get('commentaire')?.setValue(cl.commentaire)
-      : '';
+      : this.form.get('commentaire')?.setValue('');
 
     this.form.valueChanges.subscribe((value) => {
       this.clientToUpdate = value;
@@ -166,7 +189,7 @@ export class DialogFormComponentComponent implements OnInit {
       .get('dateReception')
       ?.setValue(this.datePipe.transform(dateReception, 'yyyy-MM-dd'));
 
-    if (!!this.form.get('dateLivraison')?.value) {
+    if (this.form.get('dateLivraison')?.value) {
       let dateLivraison = new Date(this.form.get('dateLivraison')?.value);
       this.form
         .get('dateLivraison')
@@ -184,7 +207,7 @@ export class DialogFormComponentComponent implements OnInit {
       .get('dateReception')
       ?.setValue(this.datePipe.transform(dateReception, 'yyyy-MM-dd'));
 
-    if (!!this.form.get('dateLivraison')?.value) {
+    if (this.form.get('dateLivraison')?.value) {
       let dateLivraison = new Date(this.form.get('dateLivraison')?.value);
       this.form
         .get('dateLivraison')

@@ -29,3 +29,9 @@ td.mat-cell {
 .cursor {
   cursor: default !important;
 }
+.example-button-row2 {
+  display: table-cell;
+  text-align: center !important;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}

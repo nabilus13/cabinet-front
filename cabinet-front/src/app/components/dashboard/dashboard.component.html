@@ -38,7 +38,7 @@
   <br />
 
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
-    <div fxFlex="70">
+    <div fxFlex>
       <app-column-chart
         [data]="data"
         [categoriesMonth]="categoriesMonth"
@@ -51,10 +51,11 @@
         [profitTotalTheorique]="profitTotalTheorique"
       ></app-column-chart>
     </div>
-    <div fxFlex="30">
+    <!-- <div fxFlex="30">
       <app-pie-chart></app-pie-chart>
-    </div>
+    </div> -->
   </div>
+  <mat-divider></mat-divider>
   <mat-divider></mat-divider>
   <br />
   <ng-container *ngIf="data && categoriesMonth">

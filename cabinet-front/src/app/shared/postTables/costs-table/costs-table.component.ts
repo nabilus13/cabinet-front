@@ -187,8 +187,8 @@ export class CostsTableComponent implements OnInit {
     });
 
     // Iterar sobre los datos y realizar la transformación
-    for (let i = 0; i < this.csvData.data.length; i++) {
-      const elemento = this.csvData.data[i];
+    for (const element of this.csvData.data) {
+      const elemento = element;
 
       // Convertir el campo 'type' a un número si es una cadena
       elemento.type = parseInt(elemento.type, 10);

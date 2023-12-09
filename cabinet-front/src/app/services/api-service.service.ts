@@ -44,6 +44,12 @@ export class ApiServiceService {
     });
   }
 
+  apiSaveAllClient(clients: Client[]): Observable<any> {
+    return this.http.post<any>(`${environment.API_BACKEND}clients/saveAll`, clients, {
+      observe:'response'
+    });
+  }
+
   deleteClient(id: number): Observable<any> {
     return this.http.delete(`${environment.API_BACKEND}clients/${id}`, {
       // headers: new HttpHeaders({
