@@ -70,60 +70,15 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
     this.finantialContentTable.forEach((item, index) => {
       this.totalSavings += +(item.reserveCaisse10prct ?? 0).toFixed(0);
       if (!!item?.profitReel && item?.profitReel < 0) {
-        if (this.totalSavings + item?.profitReel > 0) {
+        let deficit = item?.profitReel + this.totalSavings;
+        let deficitTheorique = item?.profitTheorique ?? 0 + this.totalSavings;
+        if (deficit >= 0) {
+          // Los ahorros compensan completamente las pérdidas
           this.totalSavings += item?.profitReel;
-          console.log(this.totalSavings);
-
-          this.finantialContentTable[index] = {
-            ...this.finantialContentTable[index],
-            profitReel: 0,
-            profitReelPersonne: 0,
-            profitTheorique: 0,
-          };
+          this.resetCurrentItemProfits(index);
         } else {
-          console.log(this.totalSavings);
-
-          const profitReel =
-            (this.finantialContentTable[index]?.profitReel ?? 0) +
-            this.totalSavings;
-
-          const profitTheorique =
-            (this.finantialContentTable[index]?.profitTheorique ?? 0) +
-            this.totalSavings;
-
-          console.log(profitReel);
-          console.log(this.finantialContentTable[index - 1]?.profitReel);
-
-          this.finantialContentTable[index] = {
-            ...this.finantialContentTable[index],
-            profitReel: this.returnValueProfits(
-              this.totalSavings,
-              this.finantialContentTable[index]?.profitReel ?? 0,
-              this.finantialContentTable[index - 1]?.profitReel ?? 0
-            ),
-            profitReelPersonne: this.returnValueProfits(
-              +(this.totalSavings / 3).toFixed(0),
-              this.finantialContentTable[index]?.profitReelPersonne ?? 0,
-              this.finantialContentTable[index - 1]?.profitReelPersonne ?? 0
-            ),
-            profitTheorique: this.returnValueProfits(
-              this.totalSavings,
-              this.finantialContentTable[index]?.profitTheorique ?? 0,
-              this.finantialContentTable[index - 1]?.profitTheorique ?? 0
-            ),
-          };
-          this.finantialContentTable[index - 1] = {
-            ...this.finantialContentTable[index - 1],
-            profitReel:
-              (profitReel ?? 0) +
-              (this.finantialContentTable[index - 1]?.profitReel ?? 0),
-            profitReelPersonne:
-              +(profitReel / 3).toFixed(0) +
-              (this.finantialContentTable[index - 1]?.profitReelPersonne ?? 0),
-            profitTheorique:
-              (profitTheorique ?? 0) +
-              (this.finantialContentTable[index - 1]?.profitTheorique ?? 0),
-          };
+          // Los ahorros no son suficientes, intenta compensar con el precedente
+          this.resetPrecedentItemProfits(index, this.totalSavings);
           this.totalSavings = 0;
         }
       }
@@ -132,14 +87,67 @@ export class FinancialTableComponent implements OnInit, OnDestroy {
     console.log(this.finantialContentTable);
   }
 
-  returnValueProfits(
-    savings: number,
-    item: number,
-    precedentItem: number
-  ): number {
-    const result = savings + item + precedentItem;
-    return result > 0 ? 0 : result;
+  resetCurrentItemProfits(index: number) {
+    this.finantialContentTable[index] = {
+      ...this.finantialContentTable[index],
+      profitReel: 0,
+      profitReelPersonne: 0,
+      profitTheorique: 0,
+    };
   }
+
+  resetPrecedentItemProfits(index: number, totalSavings: number) {
+    const deficit =
+      (this.finantialContentTable[index]?.profitReel ?? 0) +
+      this.totalSavings +
+      (this.finantialContentTable[index - 1]?.profitReel ?? 0);
+    if (deficit >= 0) {
+      const profitReel =
+        (this.finantialContentTable[index]?.profitReel ?? 0) +
+        this.totalSavings;
+
+      const profitTheorique =
+        (this.finantialContentTable[index]?.profitTheorique ?? 0) +
+        this.totalSavings;
+
+      this.finantialContentTable[index - 1] = {
+        ...this.finantialContentTable[index - 1],
+        profitReel:
+          (profitReel ?? 0) +
+          (this.finantialContentTable[index - 1]?.profitReel ?? 0),
+        profitReelPersonne:
+          +(profitReel / 3).toFixed(0) +
+          (this.finantialContentTable[index - 1]?.profitReelPersonne ?? 0),
+        profitTheorique:
+          (profitTheorique ?? 0) +
+          (this.finantialContentTable[index - 1]?.profitTheorique ?? 0),
+      };
+      this.resetCurrentItemProfits(index);
+    } else {
+      if ((this.finantialContentTable[index - 1]?.profitReel ?? 0) > 0) {
+        const profitReelCompense =
+          (this.finantialContentTable[index - 1]?.profitReel ?? 0) +
+          (this.finantialContentTable[index]?.profitReel ?? 0) +
+          this.totalSavings;
+        this.finantialContentTable[index] = {
+          ...this.finantialContentTable[index],
+          profitReel: profitReelCompense,
+          profitReelPersonne: +(profitReelCompense / 3).toFixed(0),
+          profitTheorique:
+            (this.finantialContentTable[index - 1]?.profitTheorique ?? 0) +
+            (this.finantialContentTable[index]?.profitTheorique ?? 0) +
+            this.totalSavings,
+        };
+        this.finantialContentTable[index - 1] = {
+          ...this.finantialContentTable[index - 1],
+          profitReel: 0,
+          profitReelPersonne: 0,
+          profitTheorique: 0,
+        };
+      }
+    }
+  }
+
   initilizeData(data: Client[]) {
     const toDate = (str: Date) =>
       new Date(str.toString().replace(/^(\d+)\/(\d+)\/(\d+)$/, '$2/$1/$3'));

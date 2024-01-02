@@ -301,6 +301,17 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
     // Formatear la fecha en formato YYYY-MM-DD
     return year.toString() + '-' + monthString + '-' + dayString;
   }
+
+
+  // Dentro de tu controlador
+
+isFieldInvalid(element: any, field: string): boolean {
+  // Lista de campos obligatorios
+  const requiredFields = ['date_reception','nombre_plans', 'client', 'lieux', 'prix', 'total_caisse'];
+
+  return requiredFields.includes(field) && (element[field] === null || element[field] === undefined || element[field] === '');
+}
+
   saveClientDataToBackend() {
     const clients: Client[] = [];
 

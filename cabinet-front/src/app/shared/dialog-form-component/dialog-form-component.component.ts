@@ -46,6 +46,7 @@ export class DialogFormComponentComponent implements OnInit {
     clientData: {
       id: 0,
       client: '',
+      lieux:'',
       dateReception: new Date(),
       nombrePlans: 0,
       prix: 0,

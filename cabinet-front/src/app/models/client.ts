@@ -5,7 +5,7 @@ export interface Client {
   dossier?: string;
   client: string;
   representant?: string;
-  lieux?: string;
+  lieux: string;
   dateLivraison?: Date;
   situation?: string;
   telephone?: number;
@@ -27,7 +27,7 @@ export interface ClientDto {
   telephone?: string;
   prix: string;
   comission?: string;
-  total_caisse?: string;
+  total_caisse: string;
   commentaire?: string;
 }
 export enum TypeRequest {
