@@ -43,11 +43,16 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   // Representa el objeto cliente que se está editando
   elementBeingEdited: any = null;
 
+  highlightMap: {[key: string]: boolean} = {};
+
+  editingContext: { element: any, field: string } = { element: null, field: '' };
+  // editingContext: {[key: string]: { element: any, field: string }} = {};
+
+
   // Representa el nombre del campo del objeto cliente que se está editando
   editingField: string | null = null;
 
   title = 'CLient';
-  dataClientsImport: ClientDto[] = [];
   constructor(
     private serviceApi: ApiServiceService,
     private dialog: MatDialog,
@@ -273,12 +278,13 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
           }
 
           data.push(row);
-          this.dataClientsImport.push(row);
         }
       }
 
+
       this.clientCsvData = new MatTableDataSource(data);
       this.clientCsvData.sort = this.sort;
+      this.updateHighlightStatus(data);
       console.log(data, this.clientCsvData);
     };
 
@@ -302,14 +308,22 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
     return year.toString() + '-' + monthString + '-' + dayString;
   }
 
-
+  updateHighlightStatus(clients: ClientDto[]) {
+    clients.forEach(client => {
+      this.displayedColumnsCsv.forEach(field => {
+        const key = client.id + '_' + field;
+        this.highlightMap[key] = this.isFieldInvalid(client, field);
+      });
+    });
+  }
+  
   // Dentro de tu controlador
 
 isFieldInvalid(element: any, field: string): boolean {
   // Lista de campos obligatorios
   const requiredFields = ['date_reception','nombre_plans', 'client', 'lieux', 'prix', 'total_caisse'];
 
-  return requiredFields.includes(field) && (element[field] === null || element[field] === undefined || element[field] === '');
+  return requiredFields.includes(field) && this.editingContext.element !== element && (element[field] === null || element[field] === undefined || element[field] === '');
 }
 
   saveClientDataToBackend() {
@@ -339,9 +353,10 @@ isFieldInvalid(element: any, field: string): boolean {
     // this.serviceApi.apiSaveAllClient(clients).subscribe((res) => {
     //   console.log(res);
     // });
+
   }
 
-  saveEditedClientRecord() {
+  saveEditedClientRecord(client: ClientDto) {
     if (this.elementBeingEdited) {
       // Aquí iría la lógica para validar y procesar los cambios
       // Por ejemplo, enviar el elemento editado al backend para su actualización
@@ -356,5 +371,16 @@ isFieldInvalid(element: any, field: string): boolean {
       //   }
       // });
     }
+    const data = [];
+data.push(client)
+    this.updateHighlightStatus(data);
+
+    this.editingContext = { element: null, field: '' }; // Resetear después de guardar
+  }
+
+  setEditing(element:any, field: string){
+    this.elementBeingEdited = element;
+    this.editingContext = { element, field };
+    
   }
 }
