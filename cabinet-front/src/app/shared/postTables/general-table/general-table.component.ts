@@ -40,17 +40,12 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   showModal = false;
   newClient: Client;
 
-  // Representa el objeto cliente que se está editando
-  elementBeingEdited: any = null;
+  highlightMap: { [key: string]: boolean } = {};
 
-  highlightMap: {[key: string]: boolean} = {};
-
-  editingContext: { element: any, field: string } = { element: null, field: '' };
-  // editingContext: {[key: string]: { element: any, field: string }} = {};
-
+  // editingContext: { element: any, field: string } = { element: null, field: '' };
+  editingContext: { [key: string]: { element: any; field: string } } = {};
 
   // Representa el nombre del campo del objeto cliente que se está editando
-  editingField: string | null = null;
 
   title = 'CLient';
   constructor(
@@ -257,7 +252,7 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
         if (values.length === headers.length) {
           // Asegurarse de que coincidan las columnas y los valores
           const row: ClientDto = {
-            id: i.toString(),
+            id: values[0],
             date_reception: this.getFormatDate(),
             nombre_plans: '',
             dossier: '',
@@ -272,6 +267,11 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
             total_caisse: '',
             commentaire: '',
           };
+          // Inicializar editingContext para cada campo del elemento
+          this.displayedColumnsCsv.forEach((field) => {
+            const key = row.id + '_' + field;
+            this.editingContext[key] = { element: null, field: '' };
+          });
 
           for (let j = 0; j < headers.length; j++) {
             row[headers[j] as keyof ClientDto] = values[j] as any;
@@ -281,11 +281,10 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
 
-
       this.clientCsvData = new MatTableDataSource(data);
       this.clientCsvData.sort = this.sort;
       this.updateHighlightStatus(data);
-      console.log(data, this.clientCsvData);
+      console.log('data', this.editingContext);
     };
 
     reader.readAsText(file);
@@ -309,22 +308,37 @@ export class GeneralTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updateHighlightStatus(clients: ClientDto[]) {
-    clients.forEach(client => {
-      this.displayedColumnsCsv.forEach(field => {
+    clients.forEach((client) => {
+      this.displayedColumnsCsv.forEach((field) => {
         const key = client.id + '_' + field;
         this.highlightMap[key] = this.isFieldInvalid(client, field);
       });
     });
   }
-  
+
   // Dentro de tu controlador
 
-isFieldInvalid(element: any, field: string): boolean {
-  // Lista de campos obligatorios
-  const requiredFields = ['date_reception','nombre_plans', 'client', 'lieux', 'prix', 'total_caisse'];
+  isFieldInvalid(element: any, field: string): boolean {
+    const key = element.id + '_' + field;
 
-  return requiredFields.includes(field) && this.editingContext.element !== element && (element[field] === null || element[field] === undefined || element[field] === '');
-}
+    // Lista de campos obligatorios
+    const requiredFields = [
+      'date_reception',
+      'nombre_plans',
+      'client',
+      'lieux',
+      'prix',
+      'total_caisse',
+    ];
+
+    return (
+      requiredFields.includes(field) &&
+      !this.editingContext[key]?.field &&
+      (element[field] === null ||
+        element[field] === undefined ||
+        element[field] === '')
+    );
+  }
 
   saveClientDataToBackend() {
     const clients: Client[] = [];
@@ -353,34 +367,37 @@ isFieldInvalid(element: any, field: string): boolean {
     // this.serviceApi.apiSaveAllClient(clients).subscribe((res) => {
     //   console.log(res);
     // });
-
   }
 
-  saveEditedClientRecord(client: ClientDto) {
-    if (this.elementBeingEdited) {
-      // Aquí iría la lógica para validar y procesar los cambios
-      // Por ejemplo, enviar el elemento editado al backend para su actualización
-      // this.apiService.updateClient(this.elementBeingEdited).subscribe({
-      //   next: (res) => {
-      //     console.log('Datos del cliente actualizados con éxito', res);
-      //     // Restablecer elementBeingEdited a null después de guardar
-      //     this.elementBeingEdited = null;
-      //   },
-      //   error: (err) => {
-      //     console.error('Error al actualizar los datos del cliente', err);
-      //   }
-      // });
-    }
+  saveEditedClientRecord(client: ClientDto, field: string) {
+    // Aquí iría la lógica para validar y procesar los cambios
+    // Por ejemplo, enviar el elemento editado al backend para su actualización
+    // this.apiService.updateClient(this.elementBeingEdited).subscribe({
+    //   next: (res) => {
+    //     console.log('Datos del cliente actualizados con éxito', res);
+    //     // Restablecer elementBeingEdited a null después de guardar
+    //     this.elementBeingEdited = null;
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al actualizar los datos del cliente', err);
+    //   }
+    // });
     const data = [];
-data.push(client)
+    data.push(client);
+
+
+    const key = client.id + '_' + field;
+    delete this.editingContext[key]; // Eliminar del contexto de edición
     this.updateHighlightStatus(data);
 
-    this.editingContext = { element: null, field: '' }; // Resetear después de guardar
   }
 
-  setEditing(element:any, field: string){
-    this.elementBeingEdited = element;
-    this.editingContext = { element, field };
-    
+  setEditing(element: any, field: string) {
+    // this.editingField = true;
+
+    const key = element.id + '_' + field;
+    this.editingContext[key] = { element, field };
+    console.log(this.editingContext);
+    this.updateHighlightStatus([element]);
   }
 }

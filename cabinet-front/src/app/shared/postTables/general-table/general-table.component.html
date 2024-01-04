@@ -138,17 +138,14 @@
               class="cursor"
               mat-cell
               [ngClass]="{
-                'highlight-cell': highlightMap[element.id + '_' + fieldHeader] && !(editingContext.element === element && editingContext.field === fieldHeader),
-                failed:
-                  (element?.type == 0 && editingContext.element !== element) ||
-                  editingContext.field !== fieldHeader
+                'highlight-cell': highlightMap[element.id + '_' + fieldHeader] 
+                
               }"
             >
               <div
                 fxLayout="row"
                 *ngIf="
-                  editingContext.element !== element ||
-                    editingContext.field !== fieldHeader;
+                  editingContext[element.id + '_' + fieldHeader]?.element !== element || editingContext[element.id + '_' + fieldHeader]?.field !== fieldHeader;
                   else editField
                 "
               >
@@ -156,20 +153,19 @@
               </div>
               <ng-template #editField>
                 <input
-                  [(ngModel)]="editingContext.element[fieldHeader]"
-                  (blur)="saveEditedClientRecord(element)"
-                  (keyup.enter)="saveEditedClientRecord(element)"
+                [(ngModel)]="editingContext[element.id + '_' + fieldHeader].element[fieldHeader]" 
+                  (blur)="saveEditedClientRecord(element, fieldHeader)"
+                  (keyup.enter)="saveEditedClientRecord(element, fieldHeader)"
                 />
                 <!-- Para campos no editables, simplemente mostrar el valor -->
-                <div *ngIf="fieldHeader !== editingField">
+                <!-- <div *ngIf="fieldHeader !== editingField">
                   {{ elementBeingEdited[fieldHeader] }}
-                </div>
+                </div> -->
               </ng-template>
 
               <button
                 *ngIf="
-                  highlightMap[element.id + '_' + fieldHeader] &&
-                  element !== elementBeingEdited
+                  highlightMap[element.id + '_' + fieldHeader]
                 "
                 mat-icon-button
                 (click)="setEditing(element, fieldHeader)"
